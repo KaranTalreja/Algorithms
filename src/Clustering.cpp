@@ -6,8 +6,6 @@
 // Description : Hello World in C++, Ansi-style
 //============================================================================
 
-#include <iostream>
-#include <stdio.h>
 #include <lex.yy.c>
 #include <include/objectModel.h>
 #include <algorithm>
@@ -17,7 +15,7 @@ int main() {
 	int cases,temp;
 	FILE* file; //
 
-	file = fopen("clustering1.txt", "r");
+	file = fopen("Example", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
@@ -50,8 +48,9 @@ int main() {
 		(*Graph)[tempNodeEndVal-1] = ((*Graph)[tempNodeEndVal-1] == NULL ) ? tempNodeEnd :(*Graph)[tempNodeEndVal-1];
 		heap.insert(tempEdge);
 	}
-	cout<<(*Graph).size()<<endl;
-	cout<<heap.getSize()<<endl;
+	int size = heap.getSize();
+	for(int i = 0;i<size;i++)
+		cout<<heap.extractMin()->weight<<endl;
 	return 0;
 }
 //	while(temp = yylex())

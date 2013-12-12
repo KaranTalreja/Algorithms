@@ -9,6 +9,7 @@
 #define OBJECTMODEL_H_
 #include <vector>
 #include<stdio.h>
+#include <iostream>
 class heapMin;
 class edge;
 class node;
@@ -46,6 +47,7 @@ heapMin()
 }
 void insert(edge*);
 edge* extractMin();
+void decompile();
 int getSize()
 {return size;}
 };
