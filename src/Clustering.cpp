@@ -47,7 +47,7 @@ int main() {
 		tempEdge->second = tempNodeEnd;
 		tempEdge->weight = tempWeight;
 		(*Graph)[tempNodeStartVal-1] = ((*Graph)[tempNodeStartVal-1] == NULL ) ? tempNodeStart :(*Graph)[tempNodeStartVal-1];
-		(*Graph)[tempNodeEndVal-1] = ((*Graph)[tempNodeStartVal-1] == NULL ) ? tempNodeEnd :(*Graph)[tempNodeEndVal-1];
+		(*Graph)[tempNodeEndVal-1] = ((*Graph)[tempNodeEndVal-1] == NULL ) ? tempNodeEnd :(*Graph)[tempNodeEndVal-1];
 		heap.insert(tempEdge);
 	}
 	cout<<(*Graph).size()<<endl;
