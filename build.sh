@@ -4,4 +4,7 @@
 echo "Lexer invoked"
 lex src/parser.l
 echo "running make"
-make -f Clustering.mak
+if [ ! -d obj ]; then 
+mkdir obj
+fi
+make -f Clustering.mak CJ
