@@ -60,14 +60,18 @@ void heapMin::decompile()
 	cout<<endl;
 
 }
-
+void heapMin::freeHeap()
+{
+	for(unsigned int i = 0;i<heap.size();i++)
+		delete (heap[i]);
+}
 void UnionFind::Union(int first,int second)
 {
 	if((*Graph)[first-1]->rank > (*Graph)[second-1]->rank)
 	{
 		(*Graph)[second-1]->leader = (*Graph)[first-1];
 		tr1::unordered_set<node*>::iterator itr = (*Graph)[second-1]->followers.begin();
-		for(itr;itr!=(*Graph)[second-1]->followers.end();itr++)
+		for(;itr!=(*Graph)[second-1]->followers.end();itr++)
 		{
 			(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
@@ -77,7 +81,7 @@ void UnionFind::Union(int first,int second)
 	{
 		(*Graph)[second-1]->leader = (*Graph)[first-1];
 		tr1::unordered_set<node*>::iterator itr = (*Graph)[second-1]->followers.begin();
-		for(itr;itr!=(*Graph)[second-1]->followers.end();itr++)
+		for(;itr!=(*Graph)[second-1]->followers.end();itr++)
 		{
 			(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
@@ -89,7 +93,7 @@ void UnionFind::Union(int first,int second)
 	{
 		(*Graph)[first-1]->leader = (*Graph)[second-1];
 		tr1::unordered_set<node*>::iterator itr = (*Graph)[first-1]->followers.begin();
-		for(itr;itr!=(*Graph)[first-1]->followers.end();itr++)
+		for(;itr!=(*Graph)[first-1]->followers.end();itr++)
 		{
 			(*Graph)[second-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
@@ -107,7 +111,7 @@ int UnionFind::Find(int child)
 		startNode = startNode->leader;
 	}
 	node* leader = startNode->leader;
-	for(int i = 0; i < listOfNodesToUpdate.size();i++)
+	for(unsigned int i = 0; i < listOfNodesToUpdate.size();i++)
 		listOfNodesToUpdate[i]->leader = leader;
 	return startNode->Id;
 }
@@ -116,16 +120,16 @@ void UnionFind::decompile()
     tr1::unordered_set<int> *hash2;
 	hash2 = new tr1::unordered_set<int>;
 
-	for (int i=0;i<(*Graph).size();i++)
+	for (unsigned int i=0;i<(*Graph).size();i++)
 	{
 	hash2->insert(tr1::unordered_set<int>::value_type(this->Find((*Graph)[i]->Id)));
 	}
 	tr1::unordered_set<int>::iterator itr = hash2->begin();
-	for(itr;itr!=hash2->end();itr++)
+	for(;itr!=hash2->end();itr++)
 	{
 		cout<<"leader: "<<(*itr)<<" Followed by ";
 		tr1::unordered_set<node*>::iterator iter = (*Graph)[*itr - 1]->followers.begin();
-		for(iter;iter!=(*Graph)[*itr -1]->followers.end();iter++)
+		for(;iter!=(*Graph)[*itr -1]->followers.end();iter++)
 		{
 			cout<<(*iter)->Id<<" ";
 		}

@@ -756,22 +756,20 @@ YY_RULE_SETUP
 #line 16 "src/parser.l"
 {return NUMBER;}
 	YY_BREAK
-case YY_STATE_EOF(INITIAL):
-#line 17 "src/parser.l"
-{return NULL;}
-	YY_BREAK
 case 4:
 /* rule 4 can match eol */
 YY_RULE_SETUP
-#line 18 "src/parser.l"
+#line 17 "src/parser.l"
 {}
 	YY_BREAK
 case 5:
 YY_RULE_SETUP
-#line 19 "src/parser.l"
+#line 18 "src/parser.l"
 ECHO;
 	YY_BREAK
-#line 775 "lex.yy.c"
+#line 771 "lex.yy.c"
+case YY_STATE_EOF(INITIAL):
+	yyterminate();
 
 	case YY_END_OF_BUFFER:
 		{
@@ -1767,7 +1765,7 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
-#line 19 "src/parser.l"
+#line 18 "src/parser.l"
 
 
 //-?[0-9]+\n? {return NUMBER;}

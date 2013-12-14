@@ -58,6 +58,7 @@ edge* extractMin();
 void decompile();
 int getSize()
 {return size;}
+void freeHeap();
 };
 
 class UnionFind

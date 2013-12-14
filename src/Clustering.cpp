@@ -59,20 +59,13 @@ int main() {
 		tempNodeEndVal = tempEdge->second->Id;
 		int Firstleader = UF.Find(tempNodeStartVal);
 		int Secondleader =UF.Find(tempNodeEndVal);
-//		cout<<"Leader of "<<tempNodeStartVal+1<<" is "<<Firstleader+1<<endl;
-//		cout<<"Leader of "<<tempNodeEndVal+1<<" is "<<Secondleader+1<<endl;
 		if(Firstleader != Secondleader)
 		{
 			UF.Union(Firstleader,Secondleader);
-//			cout<<"Union :" << tempNodeStartVal+1 <<" and "<<tempNodeEndVal+1<<endl;
-//			int Firstleader = UF.Find(tempNodeStartVal);
-//			int Secondleader =UF.Find(tempNodeEndVal);
-//			cout<<"Now Leader of "<<tempNodeStartVal+1<<" is "<<Firstleader+1<<endl;
-//			cout<<"Now Leader of "<<tempNodeEndVal+1<<" is "<<Secondleader+1<<endl;
 			noOfClusters --;
 		}
+		delete tempEdge;
 	}
-UF.decompile();
 	int maxSpacing;
 	while(1)
 	{
@@ -82,16 +75,15 @@ UF.decompile();
 		if(UF.Find(tempNodeStartVal) != UF.Find(tempNodeEndVal))
 		{
 			maxSpacing = tempEdge->weight;
+			delete tempEdge;
 			break;
 		}
+		delete tempEdge;
 	}
 	cout<<maxSpacing<<endl;
-
-
-
-//	int size = heap.getSize();
-//	for(int i = 0;i<size;i++)
-//		cout<<heap.extractMin()->weight<<endl;
+	for(int i = 0;i<noOfNodes ;i++)
+		delete ((*Graph)[i]);
+	heap.freeHeap();
 	return 0;
 }
 //	while(temp = yylex())
