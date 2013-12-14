@@ -15,7 +15,7 @@ int main() {
 
 	FILE* file; //
 
-	file = fopen("Example", "r");
+	file = fopen("clustering1.txt", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
@@ -50,7 +50,7 @@ int main() {
 	}
 
 	int noOfClusters = noOfNodes;
-	int requiredClusters = 3;
+	int requiredClusters = 4;
 	UnionFind UF(Graph);
 	while(noOfClusters != requiredClusters)
 	{
