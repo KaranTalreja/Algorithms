@@ -11,6 +11,7 @@
 #include<stdio.h>
 #include <iostream>
 class heapMin;
+class UnionFind;
 class edge;
 class node;
 class node {
@@ -18,11 +19,14 @@ class node {
 public:
 	node* leader;
 	int rank;
-	node()
+	int Id;
+	node(int Id)
 	{
+		this->Id = Id;
 		rank=0;
 		leader=this;
 	}
+	node();
 };
 class edge
 {
@@ -50,6 +54,19 @@ edge* extractMin();
 void decompile();
 int getSize()
 {return size;}
+};
+
+class UnionFind
+{
+	std::vector<node*> *Graph;
+public:
+	UnionFind(std::vector<node*> *Clusters)
+	{
+		Graph = Clusters;
+	}
+	UnionFind();
+	void Union(int first,int second);
+	int Find(int child);
 };
 
 

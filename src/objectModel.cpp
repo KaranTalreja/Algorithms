@@ -61,4 +61,30 @@ void heapMin::decompile()
 
 }
 
+void UnionFind::Union(int first,int second)
+{
+	if((*Graph)[first]->rank > (*Graph)[second]->rank)
+		(*Graph)[second]->leader = (*Graph)[first];
+	else if((*Graph)[first]->rank == (*Graph)[second]->rank)
+	{
+		(*Graph)[second]->leader = (*Graph)[first];
+		(*Graph)[first]->rank++;
+	}
+	else
+		(*Graph)[first]->leader = (*Graph)[second];
+}
 
+int UnionFind::Find(int child)
+{
+	node* startNode = (*Graph)[child];
+	vector<node*> listOfNodesToUpdate;
+	while(startNode->leader != startNode)
+	{
+		listOfNodesToUpdate.push_back(startNode);
+		startNode = startNode->leader;
+	}
+	node* leader = startNode->leader;
+	for(int i = 0; i < listOfNodesToUpdate.size();i++)
+		listOfNodesToUpdate[i]->leader = leader;
+	return startNode->Id;
+}
