@@ -10,6 +10,8 @@
 #include <vector>
 #include<stdio.h>
 #include <iostream>
+#include <tr1/unordered_set>
+using namespace std;
 class heapMin;
 class UnionFind;
 class edge;
@@ -20,11 +22,13 @@ public:
 	node* leader;
 	int rank;
 	int Id;
+	tr1::unordered_set<node*> followers;
 	node(int Id)
 	{
 		this->Id = Id;
 		rank=0;
 		leader=this;
+		followers.insert(tr1::unordered_set<node*>::value_type(this));
 	}
 	node();
 };
@@ -67,6 +71,7 @@ public:
 	UnionFind();
 	void Union(int first,int second);
 	int Find(int child);
+	void decompile();
 };
 
 

@@ -12,7 +12,7 @@
 using namespace std;
 vector<node*> *Graph;
 int main() {
-	int cases,temp;
+
 	FILE* file; //
 
 	file = fopen("Example", "r");
@@ -39,8 +39,8 @@ int main() {
 		yylex();
 		tempWeight = atoi(yytext);
 		tempEdge = new edge();
-		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(tempNodeStartVal-1) : (*Graph)[tempNodeStartVal-1];
-		tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(tempNodeEndVal-1) : (*Graph)[tempNodeEndVal-1];
+		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
+		tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
 		tempEdge->first = tempNodeStart;
 		tempEdge->second = tempNodeEnd;
 		tempEdge->weight = tempWeight;
@@ -50,7 +50,7 @@ int main() {
 	}
 
 	int noOfClusters = noOfNodes;
-	int requiredClusters = 2;
+	int requiredClusters = 3;
 	UnionFind UF(Graph);
 	while(noOfClusters != requiredClusters)
 	{
@@ -63,7 +63,7 @@ int main() {
 //		cout<<"Leader of "<<tempNodeEndVal+1<<" is "<<Secondleader+1<<endl;
 		if(Firstleader != Secondleader)
 		{
-			UF.Union(tempNodeStartVal,tempNodeEndVal);
+			UF.Union(Firstleader,Secondleader);
 //			cout<<"Union :" << tempNodeStartVal+1 <<" and "<<tempNodeEndVal+1<<endl;
 //			int Firstleader = UF.Find(tempNodeStartVal);
 //			int Secondleader =UF.Find(tempNodeEndVal);
@@ -72,6 +72,7 @@ int main() {
 			noOfClusters --;
 		}
 	}
+UF.decompile();
 	int maxSpacing;
 	while(1)
 	{
