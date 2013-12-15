@@ -66,8 +66,8 @@ int main() {
 			}
 			if(retVal <= 2)
 			{
-				int Firstleader = UF.Find((*Graph)[i+1]->Id);
-				int Secondleader =UF.Find((*Graph)[j+1]->Id);
+				int Firstleader = UF.Find((*Graph)[i]->Id + 1);
+				int Secondleader =UF.Find((*Graph)[j]->Id + 1);
 				if(Firstleader != Secondleader)
 				{
 					UF.Union(Firstleader+1,Secondleader+1);
