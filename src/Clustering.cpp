@@ -44,8 +44,8 @@ int main() {
 		tempEdge->first = tempNodeStart;
 		tempEdge->second = tempNodeEnd;
 		tempEdge->weight = tempWeight;
-		(*Graph)[tempNodeStartVal-1] = ((*Graph)[tempNodeStartVal-1] == NULL ) ? tempNodeStart :(*Graph)[tempNodeStartVal-1];
-		(*Graph)[tempNodeEndVal-1] = ((*Graph)[tempNodeEndVal-1] == NULL ) ? tempNodeEnd :(*Graph)[tempNodeEndVal-1];
+		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
+		(*Graph)[tempNodeEndVal-1] = tempNodeEnd;
 		heap.insert(tempEdge);
 	}
 
