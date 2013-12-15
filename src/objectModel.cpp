@@ -67,43 +67,43 @@ void heapMin::freeHeap()
 }
 void UnionFind::Union(int first,int second)
 {
-	if((*Graph)[first-1]->rank > (*Graph)[second-1]->rank)
+	if((*Graph)[first]->rank > (*Graph)[second]->rank)
 	{
-		(*Graph)[second-1]->leader = (*Graph)[first-1];
-		tr1::unordered_set<node*>::iterator itr = (*Graph)[second-1]->followers.begin();
-		for(;itr!=(*Graph)[second-1]->followers.end();itr++)
+		(*Graph)[second]->leader = (*Graph)[first];
+		tr1::unordered_set<node*>::iterator itr = (*Graph)[second]->followers.begin();
+		for(;itr!=(*Graph)[second]->followers.end();itr++)
 		{
-			(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
+			(*Graph)[first]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
-		(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[second-1]));
+		(*Graph)[first]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[second]));
 	}
-	else if((*Graph)[first-1]->rank == (*Graph)[second-1]->rank)
+	else if((*Graph)[first]->rank == (*Graph)[second]->rank)
 	{
-		(*Graph)[second-1]->leader = (*Graph)[first-1];
-		tr1::unordered_set<node*>::iterator itr = (*Graph)[second-1]->followers.begin();
-		for(;itr!=(*Graph)[second-1]->followers.end();itr++)
+		(*Graph)[second]->leader = (*Graph)[first];
+		tr1::unordered_set<node*>::iterator itr = (*Graph)[second]->followers.begin();
+		for(;itr!=(*Graph)[second]->followers.end();itr++)
 		{
-			(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
+			(*Graph)[first]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
-		(*Graph)[first-1]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[second-1]));
-		(*Graph)[first-1]->rank++;
+		(*Graph)[first]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[second]));
+		(*Graph)[first]->rank++;
 
 	}
 	else
 	{
-		(*Graph)[first-1]->leader = (*Graph)[second-1];
-		tr1::unordered_set<node*>::iterator itr = (*Graph)[first-1]->followers.begin();
-		for(;itr!=(*Graph)[first-1]->followers.end();itr++)
+		(*Graph)[first]->leader = (*Graph)[second];
+		tr1::unordered_set<node*>::iterator itr = (*Graph)[first]->followers.begin();
+		for(;itr!=(*Graph)[first]->followers.end();itr++)
 		{
-			(*Graph)[second-1]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
+			(*Graph)[second]->followers.insert(tr1::unordered_set<node*>::value_type(*itr));
 		}
-		(*Graph)[second-1]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[first-1]));
+		(*Graph)[second]->followers.insert(tr1::unordered_set<node*>::value_type((*Graph)[first]));
 	}
 }
 
 int UnionFind::Find(int child)
 {
-	node* startNode = (*Graph)[child-1];
+	node* startNode = (*Graph)[child];
 	vector<node*> listOfNodesToUpdate;
 	while(startNode->leader != startNode)
 	{
@@ -117,12 +117,13 @@ int UnionFind::Find(int child)
 }
 void UnionFind::decompile()
 {
+	int k=0;
     tr1::unordered_set<int> *hash2;
 	hash2 = new tr1::unordered_set<int>;
 
 	for (unsigned int i=0;i<(*Graph).size();i++)
 	{
-	hash2->insert(tr1::unordered_set<int>::value_type(this->Find((*Graph)[i]->Id + 1)));
+	hash2->insert(tr1::unordered_set<int>::value_type(this->Find((*Graph)[i]->Id)));
 	}
 	tr1::unordered_set<int>::iterator itr = hash2->begin();
 	for(;itr!=hash2->end();itr++)
@@ -132,7 +133,9 @@ void UnionFind::decompile()
 		for(;iter!=(*Graph)[*itr]->followers.end();iter++)
 		{
 			cout<<(*iter)->Id<<" ";
+			k++;
 		}
+		cout<<"Total :"<<k;
 		cout<<endl;
 	}
 }

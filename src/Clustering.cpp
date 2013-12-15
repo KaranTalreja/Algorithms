@@ -59,7 +59,6 @@ int main() {
 	for(int i=0;i<noOfNodes;i++)
 	{
 		first = (*Graph)[i]->Data;
-		int Firstleader = UF.Find((*Graph)[i]->Id + 1);
 		for(int j=0;j<noOfBits;j++)
 		{
 			tempFirst = first;
@@ -67,11 +66,12 @@ int main() {
         	isPresent = hash.find(tempFirst);
         	if(isPresent != hash.end())
         	{
-        		int Secondleader =UF.Find((*isPresent).second->Id + 1);
+        		int Firstleader = UF.Find((*Graph)[i]->Id);
+        		int Secondleader =UF.Find((*isPresent).second->Id);
         		if(Firstleader != Secondleader)
         		{
-        			UF.Union(Firstleader+1,Secondleader+1);
-        			cout<<noOfClusters++<<endl;
+        			UF.Union(Firstleader,Secondleader);
+        			noOfClusters++;
         		}
         	}
 		}
@@ -85,18 +85,19 @@ int main() {
 				isPresent = hash.find(tempFirst);
 				if(isPresent != hash.end())
 				{
-					int Secondleader =UF.Find((*isPresent).second->Id + 1);
+					int Firstleader = UF.Find((*Graph)[i]->Id);
+					int Secondleader =UF.Find((*isPresent).second->Id);
 					if(Firstleader != Secondleader)
 					{
-						UF.Union(Firstleader+1,Secondleader+1);
-						cout<<noOfClusters++<<endl;
+						UF.Union(Firstleader,Secondleader);
+						noOfClusters++;
 					}
 				}
 			}
 		}
 	}
 	cout<<noOfClusters<<endl;
-
+UF.decompile();
 
 //	for(int i=0;i<noOfNodes;i++)
 //	{
