@@ -71,7 +71,7 @@ int main() {
         		if(Firstleader != Secondleader)
         		{
         			UF.Union(Firstleader+1,Secondleader+1);
-        			noOfClusters++;
+        			cout<<noOfClusters++<<endl;
         		}
         	}
 		}
@@ -82,20 +82,20 @@ int main() {
 				tempFirst = first;
 				tempFirst = (tempFirst ^ (int)pow(2,j));
 				tempFirst = (tempFirst ^ (int)pow(2,k));
-            	isPresent = hash.find(tempFirst);
-            	if(isPresent != hash.end())
-            	{
-            		int Secondleader =UF.Find((*isPresent).second->Id + 1);
-            		if(Firstleader != Secondleader)
-            		{
-            			UF.Union(Firstleader+1,Secondleader+1);
-            			noOfClusters++;
-            		}
-            	}
+				isPresent = hash.find(tempFirst);
+				if(isPresent != hash.end())
+				{
+					int Secondleader =UF.Find((*isPresent).second->Id + 1);
+					if(Firstleader != Secondleader)
+					{
+						UF.Union(Firstleader+1,Secondleader+1);
+						cout<<noOfClusters++<<endl;
+					}
+				}
 			}
 		}
 	}
-	cout<<kk<<endl;
+	cout<<noOfClusters<<endl;
 
 
 //	for(int i=0;i<noOfNodes;i++)
