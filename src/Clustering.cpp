@@ -8,8 +8,10 @@
 
 #include <lex.yy.c>
 #include <include/objectModel.h>
+#include <tr1/unordered_map>
 #include <include/routines.h>
 #include <algorithm>
+#include <math.h>
 using namespace std;
 vector<node*> *Graph;
 int main() {
@@ -30,6 +32,7 @@ int main() {
 	node* tempNode;
 	Graph=new vector<node*>(noOfNodes);
 	int tempBit=0,tempNumber=0;
+	tr1::unordered_map <int,node*> hash;
 	for(int j =0;j<noOfNodes;j++)
 	{
 		tempNumber=0;
@@ -42,41 +45,80 @@ int main() {
 		}
 		tempNode = (NULL == (*Graph)[j]) ? new node(j,tempNumber) : (*Graph)[j];
 		(*Graph)[j] = tempNode;
+		hash.insert(tr1::unordered_map<int,node*>::value_type((*Graph)[j]->Data,(*Graph)[j]));
 	}
 	//cout<< computeHamming((*Graph)[0]->Data,(*Graph)[1]->Data,noOfBits)<<endl;
 
 	int noOfClusters=0;
 	UnionFind UF(Graph);
 	int retVal =0;
-	long long k=0;
-	long first,second,xOr;;
+	int first;
+	int tempFirst;
+	int kk =0;
+    tr1::unordered_map<int,node*>::iterator isPresent;
 	for(int i=0;i<noOfNodes;i++)
 	{
-		for(int j=i+1;j<noOfNodes;j++)
+		first = (*Graph)[i]->Data;
+		int Firstleader = UF.Find((*Graph)[i]->Id + 1);
+		for(int j=0;j<noOfBits;j++)
 		{
-			k++;
-			retVal = 0;
-			first = (*Graph)[i]->Data;
-			second =(*Graph)[j]->Data;
-			int xOr = (first^second);
-			for(int l=0;l<noOfBits;l++)
+			tempFirst = first;
+			tempFirst = (tempFirst ^ (int)pow(2,j));
+        	isPresent = hash.find(tempFirst);
+        	if(isPresent != hash.end())
+        	{
+        		int Secondleader =UF.Find((*isPresent).second->Id + 1);
+        		if(Firstleader != Secondleader)
+        		{
+        			UF.Union(Firstleader+1,Secondleader+1);
+        			noOfClusters++;
+        		}
+        	}
+		}
+		for(int j=0;j<noOfBits;j++)
+		{
+			for(int k=j+1;k<noOfBits;k++)
 			{
-				retVal += (xOr & 0x01);
-				xOr = xOr >> 1;
-			}
-			if(retVal <= 2)
-			{
-				int Firstleader = UF.Find((*Graph)[i+1]->Id);
-				int Secondleader =UF.Find((*Graph)[j+1]->Id);
-				if(Firstleader != Secondleader)
-				{
-					UF.Union(Firstleader+1,Secondleader+1);
-					noOfClusters++;
-				}
+				tempFirst = first;
+				tempFirst = (tempFirst ^ (int)pow(2,j));
+				tempFirst = (tempFirst ^ (int)pow(2,k));
+            	isPresent = hash.find(tempFirst);
+            	if(isPresent != hash.end())
+            	{
+            		int Secondleader =UF.Find((*isPresent).second->Id + 1);
+            		if(Firstleader != Secondleader)
+            		{
+            			UF.Union(Firstleader+1,Secondleader+1);
+            			noOfClusters++;
+            		}
+            	}
 			}
 		}
 	}
-	cout<<noOfClusters<<" "<<k<<endl;
+	cout<<kk<<endl;
+
+
+//	for(int i=0;i<noOfNodes;i++)
+//	{
+//		for(int j=i+1;j<noOfNodes;j++)
+//		{
+//			k++;
+//			first = (*Graph)[i]->Data;
+//			second =(*Graph)[j]->Data;
+//			int xOr = (first^second);
+//			if(computeHamming(first,second,noOfBits) <= 2)
+//			{
+//				int Firstleader = UF.Find((*Graph)[i+1]->Id);
+//				int Secondleader =UF.Find((*Graph)[j+1]->Id);
+//				if(Firstleader != Secondleader)
+//				{
+//					UF.Union(Firstleader+1,Secondleader+1);
+//					noOfClusters++;
+//				}
+//			}
+//		}
+//	}
+//	cout<<noOfClusters<<" "<<k<<endl;
 
 	return 0;
 }
