@@ -49,7 +49,6 @@ int main() {
 	}
 	//cout<< computeHamming((*Graph)[0]->Data,(*Graph)[1]->Data,noOfBits)<<endl;
 
-	int noOfClusters=0;
 	UnionFind UF(Graph);
 	int retVal =0;
 	int first;
@@ -59,10 +58,32 @@ int main() {
 	for(int i=0;i<noOfNodes;i++)
 	{
 		first = (*Graph)[i]->Data;
+		isPresent = hash.find(first);
+		if(isPresent != hash.end())
+		{
+			std::pair<int,node*> erased (isPresent->first,isPresent->second);
+			hash.erase(isPresent);
+			isPresent = hash.find(first);
+			if(isPresent != hash.end())
+			{
+        		int Firstleader = UF.Find(erased.second->Id);
+        		int Secondleader=UF.Find((*isPresent).second->Id);
+        		if(Firstleader != Secondleader)
+        		{
+        			UF.Union(Firstleader,Secondleader);
+        		}
+			}
+			hash.insert(tr1::unordered_map<int,node*>::value_type(erased));
+		}
+
+
 		for(int j=0;j<noOfBits;j++)
 		{
 			tempFirst = first;
-			tempFirst = (tempFirst ^ (int)pow(2,j));
+			tempFirst = (tempFirst ^ (int)pow(2,(double)j));
+			int t = computeHamming(first,tempFirst,noOfBits);
+			if(t != 1 && t != 2 )
+				cout<<"Hamming "<<t<<" for "<<first<<" "<<tempFirst<<endl;
         	isPresent = hash.find(tempFirst);
         	if(isPresent != hash.end())
         	{
@@ -71,7 +92,6 @@ int main() {
         		if(Firstleader != Secondleader)
         		{
         			UF.Union(Firstleader,Secondleader);
-        			noOfClusters++;
         		}
         	}
 		}
@@ -80,8 +100,11 @@ int main() {
 			for(int k=j+1;k<noOfBits;k++)
 			{
 				tempFirst = first;
-				tempFirst = (tempFirst ^ (int)pow(2,j));
-				tempFirst = (tempFirst ^ (int)pow(2,k));
+				tempFirst = (tempFirst ^ (int)pow(2,(double)j));
+				tempFirst = (tempFirst ^ (int)pow(2,(double)k));
+				int t = computeHamming(first,tempFirst,noOfBits);
+				if(t != 1 && t != 2 )
+					cout<<"Hamming "<<t<<" for "<<first<<" "<<tempFirst<<endl;
 				isPresent = hash.find(tempFirst);
 				if(isPresent != hash.end())
 				{
@@ -90,14 +113,32 @@ int main() {
 					if(Firstleader != Secondleader)
 					{
 						UF.Union(Firstleader,Secondleader);
-						noOfClusters++;
 					}
 				}
 			}
 		}
 	}
-	cout<<noOfClusters<<endl;
-UF.decompile();
+	//cout<<noOfClusters<<endl;
+	cout<<"No of leaders" << UF.decompile() <<endl;
+//	tr1::unordered_set<int>::iterator itr = UF.hash2->begin();
+//	tr1::unordered_set<int>::iterator previtr = UF.hash2->begin();
+//	tr1::unordered_set<int>::iterator itr2 = UF.hash2->begin();
+//	for(;itr!=UF.hash2->end();itr++)
+//	{
+//		previtr = itr;
+//		itr++;
+//		for(itr2=itr;itr2!=UF.hash2->end();itr2++)
+//		{
+//			int first,tempFirst;
+//			itr = previtr;
+//			first = (*Graph)[(*itr)]->Data;
+//			tempFirst = (*Graph)[(*itr2)]->Data;
+//			int t = computeHamming(first,tempFirst,noOfBits);
+//		//	if(t != 1 && t != 2 )
+//				cout<<"Hamming "<<t<<" for "<<first<<" "<<tempFirst<<endl;
+//		}
+//
+//	}
 
 //	for(int i=0;i<noOfNodes;i++)
 //	{
