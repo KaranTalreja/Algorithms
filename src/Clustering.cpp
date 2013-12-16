@@ -18,7 +18,7 @@ int main() {
 
 	FILE* file; //
 
-	file = fopen("clustering_big.txt", "r");
+	file = fopen("Example", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
@@ -32,7 +32,7 @@ int main() {
 	node* tempNode;
 	Graph=new vector<node*>(noOfNodes);
 	int tempBit=0,tempNumber=0;
-	tr1::unordered_map <int,node*> hash;
+	tr1::unordered_multimap <int,node*> hash;
 	for(int j =0;j<noOfNodes;j++)
 	{
 		tempNumber=0;
@@ -45,7 +45,7 @@ int main() {
 		}
 		tempNode = (NULL == (*Graph)[j]) ? new node(j,tempNumber) : (*Graph)[j];
 		(*Graph)[j] = tempNode;
-		hash.insert(tr1::unordered_map<int,node*>::value_type((*Graph)[j]->Data,(*Graph)[j]));
+		hash.insert(tr1::unordered_multimap<int,node*>::value_type((*Graph)[j]->Data,(*Graph)[j]));
 	}
 	//cout<< computeHamming((*Graph)[0]->Data,(*Graph)[1]->Data,noOfBits)<<endl;
 
@@ -54,29 +54,31 @@ int main() {
 	int first;
 	int tempFirst;
 	int kk =0;
-    tr1::unordered_map<int,node*>::iterator isPresent;
+    tr1::unordered_multimap<int,node*>::iterator isPresent;
+
 	for(int i=0;i<noOfNodes;i++)
 	{
 		first = (*Graph)[i]->Data;
-		isPresent = hash.find(first);
-		if(isPresent != hash.end())
+
+		tr1::unordered_multimap<int,node*>::iterator firstNode,secondNode;
+		if(hash.count(first) > 1)
 		{
-			std::pair<int,node*> erased (isPresent->first,isPresent->second);
-			hash.erase(isPresent);
-			isPresent = hash.find(first);
-			if(isPresent != hash.end())
-			{
-        		int Firstleader = UF.Find(erased.second->Id);
-        		int Secondleader=UF.Find((*isPresent).second->Id);
-        		if(Firstleader != Secondleader)
-        		{
-        			UF.Union(Firstleader,Secondleader);
-        		}
-			}
-			hash.insert(tr1::unordered_map<int,node*>::value_type(erased));
+		std::pair<tr1::unordered_multimap<int,node*>::iterator,tr1::unordered_multimap<int,node*>::iterator> p= hash.equal_range(first);
+
+		firstNode=p.first;
+		while((p.first)!=p.second)
+		{
+			secondNode= p.first;
+			++p.first;
 		}
 
-
+		int Firstleader = UF.Find(firstNode->second->Id);
+		int Secondleader=UF.Find(secondNode->second->Id);
+		if(Firstleader != Secondleader)
+		{
+			UF.Union(Firstleader,Secondleader);
+		}
+		}
 		for(int j=0;j<noOfBits;j++)
 		{
 			tempFirst = first;
