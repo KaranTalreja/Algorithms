@@ -69,16 +69,16 @@ class UnionFind
 
 
 public:
-    tr1::unordered_set<int> *hash2;
+
 	UnionFind(std::vector<node*> *Clusters)
 	{
 		Graph = Clusters;
-		hash2 = new tr1::unordered_set<int>;
+
 	}
 	UnionFind();
 	~UnionFind()
 	{
-		delete hash2;
+
 	}
 	void Union(int first,int second);
 	int Find(int child);

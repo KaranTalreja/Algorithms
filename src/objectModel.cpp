@@ -118,6 +118,8 @@ int UnionFind::Find(int child)
 int UnionFind::decompile(bool toPrint)
 {
 	int k=0;
+    tr1::unordered_set<int> *hash2;
+	hash2 = new tr1::unordered_set<int>;
 	for (unsigned int i=0;i<(*Graph).size();i++)
 	{
 	hash2->insert(tr1::unordered_set<int>::value_type(this->Find((*Graph)[i]->Id)));
@@ -137,5 +139,6 @@ int UnionFind::decompile(bool toPrint)
 		cout<<endl;
 		}
 	}
+	delete hash2;
 	return k;
 }

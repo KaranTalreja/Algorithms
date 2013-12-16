@@ -18,7 +18,7 @@ int main() {
 
 	FILE* file; //
 
-	file = fopen("Example", "r");
+	file = fopen("clustering_big.txt", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
@@ -63,21 +63,25 @@ int main() {
 		tr1::unordered_multimap<int,node*>::iterator firstNode,secondNode;
 		if(hash.count(first) > 1)
 		{
-		std::pair<tr1::unordered_multimap<int,node*>::iterator,tr1::unordered_multimap<int,node*>::iterator> p= hash.equal_range(first);
-
-		firstNode=p.first;
-		while((p.first)!=p.second)
-		{
-			secondNode= p.first;
-			++p.first;
-		}
-
-		int Firstleader = UF.Find(firstNode->second->Id);
-		int Secondleader=UF.Find(secondNode->second->Id);
-		if(Firstleader != Secondleader)
-		{
-			UF.Union(Firstleader,Secondleader);
-		}
+			vector<std::pair<int,node*> > listOfDuplicates;
+			std::pair<tr1::unordered_multimap<int,node*>::iterator,tr1::unordered_multimap<int,node*>::iterator> p= hash.equal_range(first);
+			firstNode=p.first;
+			while((p.first)!=p.second)
+			{
+				secondNode= p.first;
+				if(secondNode->first == firstNode->first)
+					listOfDuplicates.push_back(*secondNode);
+				++p.first;
+			}
+			for(vector<std::pair<int,node*> >::iterator itr=listOfDuplicates.begin();itr!=listOfDuplicates.end();itr++)
+			{
+				int Firstleader = UF.Find(firstNode->second->Id);
+				int Secondleader=UF.Find(itr->second->Id);
+				if(Firstleader != Secondleader)
+				{
+					UF.Union(Firstleader,Secondleader);
+				}
+			}
 		}
 		for(int j=0;j<noOfBits;j++)
 		{
@@ -120,8 +124,9 @@ int main() {
 			}
 		}
 	}
+//	cout<<kk<<endl;
 	//cout<<noOfClusters<<endl;
-	cout<<"No of leaders" << UF.decompile() <<endl;
+	cout<<"No of leaders " << UF.decompile() <<endl;
 //	tr1::unordered_set<int>::iterator itr = UF.hash2->begin();
 //	tr1::unordered_set<int>::iterator previtr = UF.hash2->begin();
 //	tr1::unordered_set<int>::iterator itr2 = UF.hash2->begin();
