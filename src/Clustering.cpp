@@ -168,7 +168,8 @@ int main() {
 //		}
 //	}
 //	cout<<noOfClusters<<" "<<k<<endl;
-
+	for(int i = 0;i<noOfNodes ;i++)
+		delete ((*Graph)[i]);
 	return 0;
 }
 //	while(temp = yylex())
