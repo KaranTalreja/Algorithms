@@ -8,8 +8,10 @@
 
 #include <lex.yy.c>
 #include <include/objectModel.h>
+#include <tr1/unordered_map>
 #include <include/routines.h>
 #include <algorithm>
+#include <math.h>
 using namespace std;
 vector<node*> *Graph;
 int main() {
@@ -30,6 +32,7 @@ int main() {
 	node* tempNode;
 	Graph=new vector<node*>(noOfNodes);
 	int tempBit=0,tempNumber=0;
+	tr1::unordered_multimap <int,node*> hash;
 	for(int j =0;j<noOfNodes;j++)
 	{
 		tempNumber=0;
@@ -42,42 +45,87 @@ int main() {
 		}
 		tempNode = (NULL == (*Graph)[j]) ? new node(j,tempNumber) : (*Graph)[j];
 		(*Graph)[j] = tempNode;
+		hash.insert(tr1::unordered_multimap<int,node*>::value_type((*Graph)[j]->Data,(*Graph)[j]));
 	}
-	//cout<< computeHamming((*Graph)[0]->Data,(*Graph)[1]->Data,noOfBits)<<endl;
 
-	int noOfClusters=0;
 	UnionFind UF(Graph);
 	int retVal =0;
-	long long k=0;
-	long first,second,xOr;;
+	int first;
+	int tempFirst;
+	int kk =0;
+    tr1::unordered_multimap<int,node*>::iterator isPresent;
+
 	for(int i=0;i<noOfNodes;i++)
 	{
-		for(int j=i+1;j<noOfNodes;j++)
+		first = (*Graph)[i]->Data;
+
+		tr1::unordered_multimap<int,node*>::iterator firstNode,secondNode;
+		if(hash.count(first) > 1)
 		{
-			k++;
-			retVal = 0;
-			first = (*Graph)[i]->Data;
-			second =(*Graph)[j]->Data;
-			int xOr = (first^second);
-			for(int l=0;l<noOfBits;l++)
+			vector<std::pair<int,node*> > listOfDuplicates;
+			std::pair<tr1::unordered_multimap<int,node*>::iterator,tr1::unordered_multimap<int,node*>::iterator> p= hash.equal_range(first);
+			firstNode=p.first;
+			while((p.first)!=p.second)
 			{
-				retVal += (xOr & 0x01);
-				xOr = xOr >> 1;
+				secondNode= p.first;
+				if(secondNode->first == firstNode->first)
+					listOfDuplicates.push_back(*secondNode);
+				++p.first;
 			}
-			if(retVal <= 2)
+			for(vector<std::pair<int,node*> >::iterator itr=listOfDuplicates.begin();itr!=listOfDuplicates.end();itr++)
 			{
-				int Firstleader = UF.Find((*Graph)[i]->Id + 1);
-				int Secondleader =UF.Find((*Graph)[j]->Id + 1);
+				int Firstleader = UF.Find(firstNode->second->Id);
+				int Secondleader=UF.Find(itr->second->Id);
 				if(Firstleader != Secondleader)
 				{
-					UF.Union(Firstleader+1,Secondleader+1);
-					noOfClusters++;
+					UF.Union(Firstleader,Secondleader);
+				}
+			}
+		}
+		for(int j=0;j<noOfBits;j++)
+		{
+			tempFirst = first;
+			tempFirst = (tempFirst ^ (int)pow(2,(double)j));
+			int t = computeHamming(first,tempFirst,noOfBits);
+			if(t != 1 && t != 2 )
+				cout<<"Hamming "<<t<<" for "<<first<<" "<<tempFirst<<endl;
+        	isPresent = hash.find(tempFirst);
+        	if(isPresent != hash.end())
+        	{
+        		int Firstleader = UF.Find((*Graph)[i]->Id);
+        		int Secondleader =UF.Find((*isPresent).second->Id);
+        		if(Firstleader != Secondleader)
+        		{
+        			UF.Union(Firstleader,Secondleader);
+        		}
+        	}
+		}
+		for(int j=0;j<noOfBits;j++)
+		{
+			for(int k=j+1;k<noOfBits;k++)
+			{
+				tempFirst = first;
+				tempFirst = (tempFirst ^ (int)pow(2,(double)j));
+				tempFirst = (tempFirst ^ (int)pow(2,(double)k));
+				int t = computeHamming(first,tempFirst,noOfBits);
+				if(t != 1 && t != 2 )
+					cout<<"Hamming "<<t<<" for "<<first<<" "<<tempFirst<<endl;
+				isPresent = hash.find(tempFirst);
+				if(isPresent != hash.end())
+				{
+					int Firstleader = UF.Find((*Graph)[i]->Id);
+					int Secondleader =UF.Find((*isPresent).second->Id);
+					if(Firstleader != Secondleader)
+					{
+						UF.Union(Firstleader,Secondleader);
+					}
 				}
 			}
 		}
 	}
-	cout<<noOfClusters<<" "<<k<<endl;
-
+	cout<<"No of leaders " << UF.decompile() <<endl;
+	for(int i = 0;i<noOfNodes ;i++)
+		delete ((*Graph)[i]);
 	return 0;
 }
 //	while(temp = yylex())
@@ -112,58 +160,3 @@ int main() {
 //	}
 //		}
 //	}
-//for(int i = 0; i<noOfEdges;i++)
-//{
-//	yylex();
-//	tempNodeStartVal = atoi(yytext);
-//	yylex();
-//	tempNodeEndVal = atoi(yytext);
-//	yylex();
-//	tempWeight = atoi(yytext);
-//	tempEdge = new edge();
-//	tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
-//	tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
-//	tempEdge->first = tempNodeStart;
-//	tempEdge->second = tempNodeEnd;
-//	tempEdge->weight = tempWeight;
-//	(*Graph)[tempNodeStartVal-1] = ((*Graph)[tempNodeStartVal-1] == NULL ) ? tempNodeStart :(*Graph)[tempNodeStartVal-1];
-//	(*Graph)[tempNodeEndVal-1] = ((*Graph)[tempNodeEndVal-1] == NULL ) ? tempNodeEnd :(*Graph)[tempNodeEndVal-1];
-//	heap.insert(tempEdge);
-//}
-//
-//int noOfClusters = noOfNodes;
-//int requiredClusters = 4;
-//UnionFind UF(Graph);
-//while(noOfClusters != requiredClusters)
-//{
-//	tempEdge = heap.extractMin();
-//	tempNodeStartVal = tempEdge->first->Id;
-//	tempNodeEndVal = tempEdge->second->Id;
-//	int Firstleader = UF.Find(tempNodeStartVal);
-//	int Secondleader =UF.Find(tempNodeEndVal);
-//	if(Firstleader != Secondleader)
-//	{
-//		UF.Union(Firstleader,Secondleader);
-//		noOfClusters --;
-//	}
-//	delete tempEdge;
-//}
-//int maxSpacing;
-//while(1)
-//{
-//	tempEdge=heap.extractMin();
-//	tempNodeStartVal = tempEdge->first->Id;
-//	tempNodeEndVal = tempEdge->second->Id;
-//	if(UF.Find(tempNodeStartVal) != UF.Find(tempNodeEndVal))
-//	{
-//		maxSpacing = tempEdge->weight;
-//		delete tempEdge;
-//		break;
-//	}
-//	delete tempEdge;
-//}
-//cout<<maxSpacing<<endl;
-//for(int i = 0;i<noOfNodes ;i++)
-//	delete ((*Graph)[i]);
-//heap.freeHeap();
-//return 0;
