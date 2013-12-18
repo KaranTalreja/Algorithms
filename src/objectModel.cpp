@@ -115,7 +115,7 @@ int UnionFind::Find(int child)
 		listOfNodesToUpdate[i]->leader = leader;
 	return startNode->Id;
 }
-void UnionFind::decompile()
+int UnionFind::decompile(bool toPrint)
 {
 	int k=0;
     tr1::unordered_set<int> *hash2;
