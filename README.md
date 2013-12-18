@@ -12,6 +12,7 @@ Comprises of the following things
 3. Heap Data Structure
   a. Extract-Min: Gives the minimum weight edge in the heap.
   b. Insert     : Inserts a edge into the heap.
+  c. Free Heap  : Frees the memory taken by heap container at the end of the code execution.
 4. Input file
 
 
