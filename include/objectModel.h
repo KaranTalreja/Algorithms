@@ -72,7 +72,7 @@ public:
 	UnionFind();
 	void Union(int first,int second);
 	int Find(int child);
-	void decompile();
+	int decompile(bool toPrint = false);
 };
 
 

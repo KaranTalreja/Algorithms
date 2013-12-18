@@ -117,9 +117,9 @@ int UnionFind::Find(int child)
 }
 void UnionFind::decompile()
 {
+	int k=0;
     tr1::unordered_set<int> *hash2;
 	hash2 = new tr1::unordered_set<int>;
-
 	for (unsigned int i=0;i<(*Graph).size();i++)
 	{
 	hash2->insert(tr1::unordered_set<int>::value_type(this->Find((*Graph)[i]->Id)));
@@ -127,6 +127,9 @@ void UnionFind::decompile()
 	tr1::unordered_set<int>::iterator itr = hash2->begin();
 	for(;itr!=hash2->end();itr++)
 	{
+		k++;
+		if(toPrint == true)
+		{
 		cout<<"leader: "<<(*itr)<<" Followed by ";
 		tr1::unordered_set<node*>::iterator iter = (*Graph)[*itr - 1]->followers.begin();
 		for(;iter!=(*Graph)[*itr -1]->followers.end();iter++)
@@ -134,5 +137,8 @@ void UnionFind::decompile()
 			cout<<(*iter)->Id<<" ";
 		}
 		cout<<endl;
+		}
 	}
+	delete hash2;
+	return k;
 }
