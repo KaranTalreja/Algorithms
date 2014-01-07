@@ -23,5 +23,13 @@ public:
 		this->weight=weight;
 	}
 	data();
+	int getValue()
+	{
+		return value;
+	}
+	int getWeight()
+	{
+		return weight;
+	}
 };
 #endif /* OBJECTMODEL_H_ */
