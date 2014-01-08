@@ -17,6 +17,6 @@
 #include <include/parserDefines.h>
 
 int getCurrentMemoryUsage();
-int getCachedValue(int i,int j,vector<data*>*,int);
+long int getCachedValue(int i,int j,vector<data*>*,int);
 
 #endif /* ROUTINES_H_ */

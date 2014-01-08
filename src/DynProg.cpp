@@ -17,7 +17,7 @@ int main() {
 
 
 
-	file = fopen("knapsack1.txt", "r");
+	file = fopen("knapsack_big.txt", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
