@@ -14,8 +14,9 @@
 #include <math.h>
 using namespace std;
 int main() {
-
 	FILE* file; //
+
+
 
 	file = fopen("knapsack1.txt", "r");
 
@@ -23,11 +24,13 @@ int main() {
 		cout << "file not found" << endl;
 		exit(-1);
 	}
+	int memoryStartUsage = getCurrentMemoryUsage();
 	yyin = file;
 	yylex();
 	int knapSackWeight = atoi(yytext);
 	yylex();
 	int noOfObjects = atoi(yytext);
+
 	vector<data*> Objects(noOfObjects);
 	vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
 	data* tempData;
@@ -67,6 +70,8 @@ int main() {
 	}
 	//cout<<Cache.size()<<" "<<Cache[0].size()<<endl;
 	cout<<Cache[noOfObjects][knapSackWeight]<<endl;
+    int memoryEndUsage = getCurrentMemoryUsage();
+    cout<<"Total Data Memory Used : "<<memoryEndUsage - memoryStartUsage<<endl;
 	return 0;
 }
 //	while(temp = yylex())
