@@ -14,6 +14,6 @@
 #include <include/parserDefines.h>
 
 int getCurrentMemoryUsage();
-
+int getCachedValue(int i,int j);
 
 #endif /* ROUTINES_H_ */

@@ -42,6 +42,24 @@ int getCurrentMemoryUsage()
 	return retVal;
 }
 
-
+int getCachedValue(int i,int j)
+{
+	int case1Value=0,case2Value=0;
+	if(i >= 1)
+	{
+		case1Value = Cache[ i-1 ][j];
+		//Case 2: i Node belongs to the knapsack
+		if(j-Objects[i-1]->getWeight() >= 0)
+			case2Value = Cache[ i-1 ][j-Objects[i-1]->getWeight()] + Objects[i-1]->getValue();
+		else
+			case2Value = 0;
+	}
+	else
+	{
+		case1Value = 0;
+		case2Value = 0;
+	}
+	Cache[i][j] = (case1Value > case2Value) ? (case1Value) : (case2Value);
+}
 
 
