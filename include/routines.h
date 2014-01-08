@@ -12,9 +12,11 @@
 #include <stdlib.h>
 #include <sys/types.h>
 #include <iostream>
+#include <tr1/unordered_map>
+#include <include/objectModel.h>
 #include <include/parserDefines.h>
 
 int getCurrentMemoryUsage();
-int getCachedValue(int i,int j);
+int getCachedValue(int i,int j,vector<data*>*,int);
 
 #endif /* ROUTINES_H_ */

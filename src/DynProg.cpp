@@ -8,7 +8,6 @@
 
 #include <lex.yy.c>
 #include <include/objectModel.h>
-#include <tr1/unordered_map>
 #include <include/routines.h>
 #include <algorithm>
 #include <math.h>
@@ -32,7 +31,7 @@ int main() {
 	int noOfObjects = atoi(yytext);
 
 	vector<data*> Objects(noOfObjects);
-	vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
+	//vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
 	data* tempData;
 	int tempWeight,tempValue;
 	for(int i=0;i<noOfObjects;i++)
@@ -46,16 +45,15 @@ int main() {
 	}
 
 
-	for(int i=0 ;i<=noOfObjects;i++)
+//	for(int i=0 ;i<=noOfObjects;i++)
 	{
-		for(int j = 0;j<=knapSackWeight ;j++)
+//		for(int j = 0;j<=knapSackWeight ;j++)
 		{
-			//Case 1: i Node does not belong to the knapsack
-
+			cout<<getCachedValue(noOfObjects,knapSackWeight,&Objects,noOfObjects)<<endl;
 		}
 	}
 	//cout<<Cache.size()<<" "<<Cache[0].size()<<endl;
-	cout<<Cache[noOfObjects][knapSackWeight]<<endl;
+	//cout<<Cache[noOfObjects][knapSackWeight]<<endl;
     int memoryEndUsage = getCurrentMemoryUsage();
     cout<<"Total Data Memory Used : "<<memoryEndUsage - memoryStartUsage<<endl;
 	return 0;

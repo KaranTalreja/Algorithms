@@ -42,15 +42,27 @@ int getCurrentMemoryUsage()
 	return retVal;
 }
 
-int getCachedValue(int i,int j)
+int getCachedValue(int i,int j,vector<data*> *tempObjects,int noOfObjects)
 {
+	static long long k=0;
+	static tr1::unordered_map<long int,int> hash;
+	tr1::unordered_map<long int,int>::iterator itr;
+	k++;
+	long int Idx = j*noOfObjects + i;
+
+	itr = hash.find(Idx);
+
+	if(itr!=hash.end())
+		return itr->second;
+
+	vector<data*> Objects = *tempObjects;
 	int case1Value=0,case2Value=0;
 	if(i >= 1)
 	{
-		case1Value = Cache[ i-1 ][j];
+		case1Value = getCachedValue(i-1 ,j,tempObjects,noOfObjects);
 		//Case 2: i Node belongs to the knapsack
 		if(j-Objects[i-1]->getWeight() >= 0)
-			case2Value = Cache[ i-1 ][j-Objects[i-1]->getWeight()] + Objects[i-1]->getValue();
+			case2Value = getCachedValue( i-1 ,j-Objects[i-1]->getWeight(),tempObjects,noOfObjects) + Objects[i-1]->getValue();
 		else
 			case2Value = 0;
 	}
@@ -59,7 +71,9 @@ int getCachedValue(int i,int j)
 		case1Value = 0;
 		case2Value = 0;
 	}
-	Cache[i][j] = (case1Value > case2Value) ? (case1Value) : (case2Value);
+//	cout<<k<<" : "<<((case1Value > case2Value) ? (case1Value) : (case2Value))<<endl;
+	hash.insert(make_pair<long int,int>(Idx,((case1Value > case2Value) ? (case1Value) : (case2Value))));
+	return (case1Value > case2Value) ? (case1Value) : (case2Value);
 }
 
 
