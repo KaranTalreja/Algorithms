@@ -29,7 +29,7 @@ int main() {
 	yylex();
 	int noOfObjects = atoi(yytext);
 	vector<data*> Objects(noOfObjects);
-	vector<vector<int> > Cache (noOfObjects + 1, knapSackWeight + 1);
+	vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
 	data* tempData;
 	int tempWeight,tempValue;
 	for(int i=0;i<noOfObjects;i++)
