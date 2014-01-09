@@ -46,9 +46,7 @@ long int getCachedValue(int i,int j,vector<data*> *tempObjects,int noOfObjects)
 {
 	static long long k=0;
 	static tr1::unordered_map<long int,long int> hash;
-	static tr1::unordered_map<long int,long int *> Cache;
 	tr1::unordered_map<long int,long int>::iterator itr;
-	tr1::unordered_map<long int,long int*>:: iterator itr_value;
 	k++;
 	long int Idx = (long int)j*noOfObjects + i;
 
@@ -73,22 +71,11 @@ long int getCachedValue(int i,int j,vector<data*> *tempObjects,int noOfObjects)
 		case1Value = 0;
 		case2Value = 0;
 	}
-	long int result = case1Value > case2Value ? case1Value : case2Value;
-	itr_value = Cache.find(result);
-	if(itr_value == Cache.end())
-	{
-		hash.insert(make_pair<long int,long int>(Idx,result));
-		long int *tempPtr = new long int;
-		*tempPtr = result;
-		Cache.insert(make_pair<long int,long int*>(result,tempPtr));
-	}
-	else
-	{
-		result =  *(itr_value->second);
-	}
+//	cout<<k<<" : "<<((case1Value > case2Value) ? (case1Value) : (case2Value))<<endl;
+	hash.insert(make_pair<long int,long int>(Idx,((case1Value > case2Value) ? (case1Value) : (case2Value))));
 	if(i == noOfObjects)
 		cout<<"Total Iterations:"<<k<<endl<<"Total elements: "<<hash.size()<<endl;
-	return result;
+	return (case1Value > case2Value) ? (case1Value) : (case2Value);
 }
 
 
