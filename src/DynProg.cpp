@@ -8,7 +8,6 @@
 
 #include <lex.yy.c>
 #include <include/objectModel.h>
-#include <tr1/unordered_map>
 #include <include/routines.h>
 #include <algorithm>
 #include <math.h>
@@ -18,7 +17,7 @@ int main() {
 
 
 
-	file = fopen("knapsack1.txt", "r");
+	file = fopen("knapsack_big.txt", "r");
 
 	if (!file) {
 		cout << "file not found" << endl;
@@ -32,7 +31,7 @@ int main() {
 	int noOfObjects = atoi(yytext);
 
 	vector<data*> Objects(noOfObjects);
-	vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
+	//vector<vector<int> > Cache (noOfObjects + 1, vector<int>(knapSackWeight + 1));
 	data* tempData;
 	int tempWeight,tempValue;
 	for(int i=0;i<noOfObjects;i++)
@@ -45,31 +44,16 @@ int main() {
 		Objects[i] = tempData;
 	}
 
-	int case1Value=0,case2Value=0;
-	for(int i=0 ;i<=noOfObjects;i++)
+
+//	for(int i=0 ;i<=noOfObjects;i++)
 	{
-		for(int j = 0;j<=knapSackWeight ;j++)
+//		for(int j = 0;j<=knapSackWeight ;j++)
 		{
-			//Case 1: i Node does not belong to the knapsack
-			if(i >= 1)
-			{
-				case1Value = Cache[ i-1 ][j];
-				//Case 2: i Node belongs to the knapsack
-				if(j-Objects[i-1]->getWeight() >= 0)
-					case2Value = Cache[ i-1 ][j-Objects[i-1]->getWeight()] + Objects[i-1]->getValue();
-				else
-					case2Value = 0;
-			}
-			else
-			{
-				case1Value = 0;
-				case2Value = 0;
-			}
-			Cache[i][j] = (case1Value > case2Value) ? (case1Value) : (case2Value);
+			cout<<getCachedValue(noOfObjects,knapSackWeight,&Objects,noOfObjects)<<endl;
 		}
 	}
 	//cout<<Cache.size()<<" "<<Cache[0].size()<<endl;
-	cout<<Cache[noOfObjects][knapSackWeight]<<endl;
+	//cout<<Cache[noOfObjects][knapSackWeight]<<endl;
     int memoryEndUsage = getCurrentMemoryUsage();
     cout<<"Total Data Memory Used : "<<memoryEndUsage - memoryStartUsage<<endl;
 	return 0;
