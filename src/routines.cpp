@@ -74,7 +74,7 @@ long int getCachedValue(int i,int j,vector<data*> *tempObjects,int noOfObjects)
 //	cout<<k<<" : "<<((case1Value > case2Value) ? (case1Value) : (case2Value))<<endl;
 	hash.insert(make_pair<long int,long int>(Idx,((case1Value > case2Value) ? (case1Value) : (case2Value))));
 	if(i == noOfObjects)
-		cout<<k<<" "<<hash.size()<<" "<<Idx<<endl;
+		cout<<"Total Iterations:"<<k<<endl<<"Total elements: "<<hash.size()<<endl;
 	return (case1Value > case2Value) ? (case1Value) : (case2Value);
 }
 

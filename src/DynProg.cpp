@@ -44,16 +44,7 @@ int main() {
 		Objects[i] = tempData;
 	}
 
-
-//	for(int i=0 ;i<=noOfObjects;i++)
-	{
-//		for(int j = 0;j<=knapSackWeight ;j++)
-		{
-			cout<<getCachedValue(noOfObjects,knapSackWeight,&Objects,noOfObjects)<<endl;
-		}
-	}
-	//cout<<Cache.size()<<" "<<Cache[0].size()<<endl;
-	//cout<<Cache[noOfObjects][knapSackWeight]<<endl;
+	cout<<"Best Possible KnapSack: "<<getCachedValue(noOfObjects,knapSackWeight,&Objects,noOfObjects)<<endl;
     int memoryEndUsage = getCurrentMemoryUsage();
     cout<<"Total Data Memory Used : "<<memoryEndUsage - memoryStartUsage<<endl;
 	return 0;
