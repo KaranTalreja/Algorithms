@@ -29,6 +29,7 @@ public:
 	int getSize()
 	{return size;}
 	void freeHeap();
+	bool check(node*);
 };
 class node {
 
@@ -101,7 +102,6 @@ int main()
 		{
 			Source = heap.extractMin();
 			heap.deleteNode(Source);
-			heap.decompile();
 		}
 		if(NULL != Source)
 		{
@@ -111,23 +111,15 @@ int main()
 			{
 				tempEdge = (*iter);
 				tempNodeEnd = tempEdge->second;
-				if(Source->data + tempEdge->weight > 10000000)
-					cout<<"OVERFLOW"<<endl;
-				if((tempNodeEnd->explored == false) && (Source->data + tempEdge->weight < tempNodeEnd->data))
+				if((tempNodeEnd->explored == false))
 				{
-					if(tempNodeEnd -> indexInHeap >= 0)
+					if((Source->data + tempEdge->weight < tempNodeEnd->data))
 					{
-						heap.deleteNode(tempNodeEnd);
-						heap.decompile();
+						if(tempNodeEnd -> indexInHeap >= 0)
+							heap.deleteNode(tempNodeEnd);
+						tempNodeEnd->data = Source->data + tempEdge->weight;
+						heap.insert(tempNodeEnd);
 					}
-					tempNodeEnd->data = Source->data + tempEdge->weight;
-					if(tempNodeEnd->indexInHeap !=-1)
-					{
-						cout<<"ERROR"<<endl;
-						cout<<"tempNode :"<<tempNodeEnd->indexInHeap<<endl;
-					}
-					heap.insert(tempNodeEnd);
-					heap.decompile();
 				}
 			}
 			Source = NULL;
@@ -203,11 +195,15 @@ void heapMin::insert(node* Edge)
 
 node* heapMin::extractMin(void)
 {
-	return heap[0];
+	if(!heap.empty())
+		return heap[0];
+	else
+		return NULL;
 }
 void heapMin::deleteNode(node* del)
 {
 	node* tempEdge;
+	int temp = del->indexInHeap + 1;
 	int parent = del->indexInHeap + 1;
 	tempEdge = heap[del->indexInHeap];
 	heap[del->indexInHeap] = heap[size-1];
@@ -217,14 +213,26 @@ void heapMin::deleteNode(node* del)
 	vector<node*> :: iterator itr = heap.begin();
 	itr = itr + size -1;
 	size--;
-
-	int child = parent;
+	int child = temp;
+	parent = (child)/2;
+	while((parent >=1) && (heap[parent-1]->data > heap[child-1]->data))
+	{
+		tempEdge = heap[child-1];
+		heap[child-1] = heap[parent-1];
+		heap[child-1]->indexInHeap = child - 1;
+		heap[parent-1] = tempEdge;
+		heap[parent-1]->indexInHeap = parent - 1;
+		child = parent;
+		parent = parent/2;
+	}
+	child = temp;
+	parent = temp;
 	while(2*parent <= size)
 	{
 		if(2*parent != size)
 		{
 			child = (heap[(2*parent)-1]->data <= heap[(2*parent)]->data) ? 2*parent : 2*parent + 1;
-			if(heap[child-1]->data > heap[parent-1]->data)
+			if(heap[child-1]->data < heap[parent-1]->data)
 			{
 				tempEdge = heap[child -1];
 				heap[child - 1] = heap[parent - 1];
@@ -252,32 +260,53 @@ void heapMin::deleteNode(node* del)
 				break;
 		}
 	}
+
 	(*itr)->indexInHeap = -1;
 	heap.erase(itr);
 }
 void heapMin::decompile()
 {
-//	for(vector<node*>::iterator itr = heap.begin();itr!=heap.end();itr++)
-//	{
-//		cout<<(*itr)->data<<" ";
-//	}
-//	cout<<endl;
-	int prev = -1;
 	for(vector<node*>::iterator itr = heap.begin();itr!=heap.end();itr++)
 	{
-		if(prev > (*itr)->indexInHeap)
-			cout<<"HEAP ERROR"<<":"<<prev<<endl;
-		prev = (*itr)->indexInHeap;
-		//cout<<(*itr)->indexInHeap<<" ";
+		cout<<(*itr)->data<<" ";
 	}
-	int i=0;
-	for(vector<node*>::iterator itr = heap.begin();itr!=heap.end();itr++,i++)
+	cout<<endl;
+	for(vector<node*>::iterator itr = heap.begin();itr!=heap.end();itr++)
 	{
-		if(i != (*itr)->indexInHeap)
-			cout<<"2HEAP ERROR"<<":"<<(*itr)->indexInHeap<<endl;
-		//prev = (*itr)->indexInHeap;
-		//cout<<(*itr)->indexInHeap<<" ";
+		cout<<(*itr)->indexInHeap<<" ";
 	}
-	//cout<<endl;
+	cout<<endl;
 
+}
+bool heapMin::check(node* checkNode)
+{
+	bool leftTree = false,rightTree = false;
+	int Id = checkNode->indexInHeap+1;
+	unsigned int childLeft = Id*2;
+	unsigned int childRight = Id*2 + 1;
+	if(childLeft - 1 < heap.size())
+		leftTree = check(heap[childLeft - 1]);
+	else
+	{
+		if(heap[checkNode->indexInHeap]->data >= heap[(checkNode->indexInHeap-1)/2]->data)
+			return true;
+		else
+			return false;
+	}
+	if(childRight - 1 < heap.size())
+		rightTree = check(heap[childRight -1]);
+	else
+	{
+		if(heap[checkNode->indexInHeap]->data >= heap[(checkNode->indexInHeap-1)/2]->data)
+			return true;
+		else
+			return false;
+	}
+	if(leftTree == true && rightTree == true)
+		return true;
+	else
+	{
+		//cout<<"HEAP BREAKDOWN"<<endl;
+		return false;
+	}
 }
