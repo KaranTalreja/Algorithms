@@ -91,17 +91,22 @@ int main()
 		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
 	}
 	heapMin heap;
-	node * Source = NULL;
+	node * Source = (*Graph)[0];
+	vector<node*> NewNode;
+	NewNode.push_back((*Graph)[0]);
 	(*Graph)[0]->data = 0;
-	heap.insert((*Graph)[0]);
 	vector<edge*>::iterator iter;
 	for(int i=0;i<noOfNodes;i++)
 	{
-		if(heap.getSize() > 0)
+		unsigned int min = 10000000;
+		vector<node*>::iterator itrr = NewNode.begin();
+		for(int s =0;s<NewNode.size();s++)
 		{
-			Source = heap.extractMin();
-			heap.deleteNode(Source);
-			heap.decompile();
+			if(NewNode[s]->explored == false && min > NewNode[s]->data)
+			{
+				min = NewNode[s]->data;
+				Source = NewNode[s];
+			}
 		}
 		if(NULL != Source)
 		{
@@ -115,19 +120,8 @@ int main()
 					cout<<"OVERFLOW"<<endl;
 				if((tempNodeEnd->explored == false) && (Source->data + tempEdge->weight < tempNodeEnd->data))
 				{
-					if(tempNodeEnd -> indexInHeap >= 0)
-					{
-						heap.deleteNode(tempNodeEnd);
-						heap.decompile();
-					}
 					tempNodeEnd->data = Source->data + tempEdge->weight;
-					if(tempNodeEnd->indexInHeap !=-1)
-					{
-						cout<<"ERROR"<<endl;
-						cout<<"tempNode :"<<tempNodeEnd->indexInHeap<<endl;
-					}
-					heap.insert(tempNodeEnd);
-					heap.decompile();
+					NewNode.push_back(tempNodeEnd);
 				}
 			}
 			Source = NULL;
