@@ -1,12 +1,6 @@
-Dijkstra Algorithm
+Bellman Ford's Algorithm
 
-Running Time complexity
-
-O(mlogn)
-
-Implemented using heap structures which support deletions. In order for them to support deletion, nodes were taken which had information of
-their position in the heap.
-
+Time complexity : O(mn)
 
 Instructions:
 1.To build run command
