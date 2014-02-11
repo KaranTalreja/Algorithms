@@ -20,16 +20,12 @@ public:
 	int indexInHeap;
 	bool explored;
 	vector<edge*> edges;
-	vector<int> distances;
 	node(int data,int Id)
 	{
 		this->data = data;
 		this->Id = Id;
 		indexInHeap = -1;
 		explored = false;
-		for(int i=0;i<noOfNodes;i++)
-			distances.push_back(10000000);
-		distances[this->Id] = 0;
 	}
 	node();
 };
@@ -119,7 +115,6 @@ int main()
 	for(int k=0;k<10;k++)
 		cout<<Cache[0][arr[k]-1]<<',';
 	cout<<endl;
-
 
 	return 0;
 }
