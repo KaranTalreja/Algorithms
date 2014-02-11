@@ -76,23 +76,22 @@ int main()
 		}
 		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
 	}
-	vector<vector<vector<int> > > Cache(noOfNodes,vector<vector<int> >(noOfNodes,vector<int>(noOfNodes)));
-
+	vector<vector<int> > Cache(noOfNodes,vector<int>(noOfNodes));
+	vector<vector<int> > prevCache(noOfNodes,vector<int>(noOfNodes));
 	for(int i=0;i<noOfNodes;i++)
 	{
 		for(int j=0;j<noOfNodes;j++)
 		{
 			if(i != j)
-				Cache[i][j][0] = 10000000;
+				prevCache[i][j] = 10000000;
 		}
 		for(unsigned int j=0;j<(*Graph)[i]->edges.size();j++)
 		{
 			int sourceId = i,DestinationId = (*Graph)[i]->edges[j]->second->Id;
-			if(Cache[sourceId][DestinationId][0] > (*Graph)[i]->edges[j]->weight)
-				Cache[sourceId][DestinationId][0] = (*Graph)[i]->edges[j]->weight;
+			if(prevCache[sourceId][DestinationId] > (*Graph)[i]->edges[j]->weight)
+				prevCache[sourceId][DestinationId] = (*Graph)[i]->edges[j]->weight;
 		}
 	}
-
 	for(int k=1;k<noOfNodes;k++)
 	{
 		for(int i=0;i<noOfNodes;i++)
@@ -100,10 +99,17 @@ int main()
 			for(int j=0;j<noOfNodes;j++)
 			{
 				int case1Value,case2Value,finalVal;
-				case1Value = Cache[i][j][k-1];
-				case2Value = Cache[i][k][k-1] + Cache[k][j][k-1];
+				case1Value = prevCache[i][j];
+				case2Value = prevCache[i][k] + prevCache[k][j];
 				finalVal = case1Value < case2Value ? case1Value : case2Value;
-				Cache[i][j][k] = finalVal;
+				Cache[i][j] = finalVal;
+			}
+		}
+		for(int i=0;i<noOfNodes;i++)
+		{
+			for(int j=0;j<noOfNodes;j++)
+			{
+				prevCache[i][j] = Cache[i][j];
 			}
 		}
 	}
@@ -111,7 +117,7 @@ int main()
 	int arr[10] = {7,37,59,82,99,115,133,165,188,197};
 
 	for(int k=0;k<10;k++)
-		cout<<Cache[0][arr[k]-1][noOfNodes-1]<<',';
+		cout<<Cache[0][arr[k]-1]<<',';
 	cout<<endl;
 
 
