@@ -95,26 +95,20 @@ int main()
 
 	node* Source = (*Graph)[0];
 	Source -> data = 0;
-
+	for(int i=0;i<noOfNodes;i++)
+		newValue[i] = (*Graph)[i]->data;
 	for(int k=0;k<noOfNodes;k++)
 	{
 		for(int i=0;i<noOfNodes;i++)
 		{
-			int case1Value,case2Value;
-
-			case1Value = (*Graph)[i]->data;
-			case2Value = 10000000;
 			for(unsigned int j=0;j<(*Graph)[i]->edges.size();j++)
 			{
-				if((case2Value > (*Graph)[i]->edges[j]->second->data + (*Graph)[i]->edges[j]->weight))
-					case2Value = (*Graph)[i]->edges[j]->second->data + (*Graph)[i]->edges[j]->weight;
+				if((newValue[(*Graph)[i]->edges[j]->second->Id] > (*Graph)[i]->data + (*Graph)[i]->edges[j]->weight))
+					newValue[(*Graph)[i]->edges[j]->second->Id] = (*Graph)[i]->data + (*Graph)[i]->edges[j]->weight;
 			}
-			newValue[i] = case1Value < case2Value ? case1Value : case2Value;
 		}
 		for(int i=0;i<noOfNodes;i++)
-		{
 			(*Graph)[i]->data = newValue[i];
-		}
 	}
 
 	int arr[10] = {7,37,59,82,99,115,133,165,188,197};
