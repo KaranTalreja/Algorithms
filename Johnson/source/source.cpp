@@ -168,6 +168,8 @@ int main()
 			{
 				Source = heap.extractMin();
 				heap.deleteNode(Source);
+				if(heap.getSize())
+					heap.check(heap.extractMin());
 			}
 			if(NULL != Source)
 			{
@@ -182,9 +184,14 @@ int main()
 						if((Source->data + tempEdge->weight < tempNodeEnd->data))
 						{
 							if(tempNodeEnd -> indexInHeap >= 0)
+							{
 								heap.deleteNode(tempNodeEnd);
+								if(heap.getSize())
+									heap.check(heap.extractMin());
+							}
 							tempNodeEnd->data = Source->data + tempEdge->weight;
 							heap.insert(tempNodeEnd);
+							heap.check(heap.extractMin());
 						}
 					}
 				}
@@ -409,7 +416,7 @@ bool heapMin::check(node* checkNode)
 		return true;
 	else
 	{
-		//cout<<"HEAP BREAKDOWN"<<endl;
+		cout<<"HEAP BREAKDOWN"<<endl;
 		return false;
 	}
 }
