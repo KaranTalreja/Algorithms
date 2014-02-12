@@ -96,7 +96,6 @@ int main()
 	}
 	// ADDING A DUMMY NODE TO RUN BELLMAN FORD
 
-
 	node* dummyNode = new node(10000000,noOfNodes);
 	for(int i = 0;i<noOfNodes;i++)
 		dummyNode->edges.push_back(new edge(dummyNode,(*Graph)[i],0));
@@ -150,7 +149,6 @@ int main()
 		}
 	}
 
-
 	//DIJKSTRA ALGORITHM RUN N-TIMES TO COMPUTE SHORTEST PATH FOR ALL PAIRS
 
 
@@ -168,8 +166,6 @@ int main()
 			{
 				Source = heap.extractMin();
 				heap.deleteNode(Source);
-				if(heap.getSize())
-					heap.check(heap.extractMin());
 			}
 			if(NULL != Source)
 			{
@@ -184,14 +180,9 @@ int main()
 						if((Source->data + tempEdge->weight < tempNodeEnd->data))
 						{
 							if(tempNodeEnd -> indexInHeap >= 0)
-							{
 								heap.deleteNode(tempNodeEnd);
-								if(heap.getSize())
-									heap.check(heap.extractMin());
-							}
 							tempNodeEnd->data = Source->data + tempEdge->weight;
 							heap.insert(tempNodeEnd);
-							heap.check(heap.extractMin());
 						}
 					}
 				}
@@ -221,23 +212,12 @@ int main()
 			Cache[i][j] = Cache[i][j] - sourceWeight + (*Graph)[j]->weight;
 		}
 	}
-
 	//OUTPUT
 	int arr[10] = {7,37,59,82,99,115,133,165,188,197};
 
 	for(int k=0;k<10;k++)
-		cout<<Cache[0][arr[k]-1]<<',';
+		cout<<Cache[0][arr[k]-1]<<",";
 	cout<<endl;
-	for(int i=0;i<noOfNodes;i++)
-	{
-		for(int j=0;j<noOfNodes;j++)
-		{
-			cout<<Cache[i][j]<<" ";
-		}
-		cout<<endl;
-	}
-
-
 	return 0;
 }
 inline int getInt(char **str)
