@@ -1,6 +1,4 @@
-Bellman Ford's Algorithm
-
-Time complexity : O(mn)
+Johnson's Algorithm
 
 Instructions:
 1.To build run command
