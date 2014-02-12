@@ -115,7 +115,14 @@ int main()
 	for(int k=0;k<10;k++)
 		cout<<Cache[0][arr[k]-1]<<',';
 	cout<<endl;
-
+	for(int i=0;i<noOfNodes;i++)
+	{
+		for(int j=0;j<noOfNodes;j++)
+		{
+			cout<<Cache[i][j]<<" ";
+		}
+		cout<<endl;
+	}
 	return 0;
 }
 inline int getInt(char **str)
