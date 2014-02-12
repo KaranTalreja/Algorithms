@@ -88,7 +88,7 @@ int main()
 				prevCache[sourceId][DestinationId] = (*Graph)[i]->edges[j]->weight;
 		}
 	}
-	for(int k=1;k<noOfNodes;k++)
+	for(int k=0;k<noOfNodes;k++)
 	{
 		for(int i=0;i<noOfNodes;i++)
 		{
@@ -113,9 +113,8 @@ int main()
 	int arr[10] = {7,37,59,82,99,115,133,165,188,197};
 
 	for(int k=0;k<10;k++)
-		cout<<Cache[0][arr[k]-1]<<',';
+		cout<<Cache[0][arr[k]-1]<<",";
 	cout<<endl;
-
 	return 0;
 }
 inline int getInt(char **str)
