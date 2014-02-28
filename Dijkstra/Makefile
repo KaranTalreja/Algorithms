@@ -1,3 +1,3 @@
 SOURCE: source/source.cpp
 	mkdir -p bin
-	g++ -g -Wall source/source.cpp -o bin/exec
+	g++ -g -Wall -o bin/exec source/source.cpp -lboost_serialization
