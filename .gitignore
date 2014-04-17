@@ -1,6 +1,7 @@
 .cproject
 .project
 /bin
+/obj
 TEST
 /TestResult
 *.o
