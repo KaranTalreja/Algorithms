@@ -230,14 +230,14 @@ bool heapMin<keyType, valueType>::check(valueType* checkNode)
 }
 
 template<typename nodeType,typename edgeType>
-void Dijkstra (graph<nodeType> *Graph)
+void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode)
 {
     heapMin<unsigned int, nodeType> heap;
     nodeType* Source = NULL;
     edgeType* tempEdge = NULL;
     nodeType* tempNodeEnd = NULL;
-    (*Graph)[0]->data = 0;
-    heap.insert((*Graph)[0]);
+    (*Graph)[indexOfSourceNode]->data = 0;
+    heap.insert((*Graph)[indexOfSourceNode]);
     typename vector<edgeType*>::iterator iter;
     int noOfNodes = Graph->size();
     for(int i=0;i<noOfNodes;i++)
@@ -269,7 +269,7 @@ void Dijkstra (graph<nodeType> *Graph)
             Source = NULL;
         }
         else
-            cout<<"Graph Not Connected"<<endl;
+            break;
     }
 }
 

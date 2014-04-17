@@ -71,7 +71,7 @@ int main()
 		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
 	}
 
-	Dijkstra<node,edge>(Graph);
+	Dijkstra<node,edge>(Graph,0);
 
 	int arr[10] = {7,37,59,82,99,115,133,165,188,197};
 
