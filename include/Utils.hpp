@@ -230,7 +230,7 @@ bool heapMin<keyType, valueType>::check(valueType* checkNode)
 }
 
 template<typename nodeType,typename edgeType>
-void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode)
+void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode, size_t indexOfDestinationNode)
 {
     heapMin<unsigned int, nodeType> heap;
     nodeType* Source = NULL;
@@ -242,6 +242,8 @@ void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode)
     int noOfNodes = Graph->size();
     for(int i=0;i<noOfNodes;i++)
     {
+        if((indexOfDestinationNode != -1) && ((*Graph)[indexOfDestinationNode]->explored == true))
+            break;
         if(heap.getSize() > 0)
         {
             Source = heap.extractMin();

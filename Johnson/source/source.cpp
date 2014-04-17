@@ -134,7 +134,7 @@ int main()
 	for(int j=0;j<noOfNodes;j++)
 	{
 
-	    Dijkstra<node,edge>(Graph,j);
+	    Dijkstra<node,edge>(Graph,j,-1);
 		int NoOfNodes = (*Graph).size();
 		for(int i =0;i<NoOfNodes;i++)
 		{
