@@ -75,8 +75,8 @@ public:
 };
 template <typename nodeType>
 using graph =  vector<nodeType*>;
-//template <typename nodeType>
-//using graph = vector<nodeType*>;
+template <typename nodeType>
+using path = vector<nodeType*>;
 
 
 template <typename keyType, typename valueType>
@@ -264,6 +264,7 @@ void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode, size_t indexOfD
                         if(tempNodeEnd -> indexInHeap >= 0)
                             heap.deleteNode(tempNodeEnd);
                         tempNodeEnd->data = Source->data + tempEdge->weight;
+                        tempNodeEnd->visitedBy = Source;
                         heap.insert(tempNodeEnd);
                     }
                 }
@@ -272,6 +273,86 @@ void Dijkstra (graph<nodeType> *Graph, size_t indexOfSourceNode, size_t indexOfD
         }
         else
             break;
+    }
+}
+template <typename nodeType, typename edgeType>
+void readEdgesForGraph (graph<nodeType> *Graph, int noOfNodes, int noOfEdges, bool isDirectedGraph, bool printGraph = false)
+{
+    edgeType *tempEdge,*tempEdge2;
+    nodeType *tempNodeStart,*tempNodeEnd;
+    int tempNodeStartVal,tempNodeEndVal,tempWeight;
+    if(printGraph == true) printf("%d %d\n", noOfNodes, noOfEdges);
+    for(int i = 0; i<noOfEdges;i++)
+    {
+        inp(tempNodeStartVal);inp(tempNodeEndVal);inp(tempWeight);
+        if(printGraph == true) printf("%d %d %d\n", tempNodeStartVal, tempNodeEndVal, tempWeight);
+        tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new nodeType(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
+        tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new nodeType(tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
+        tempEdge = new edgeType(tempNodeStart,tempNodeEnd,tempWeight);
+        tempNodeStart->edges.push_back(tempEdge);
+        if(false == isDirectedGraph)
+        {
+            tempEdge2 = new edgeType(tempNodeEnd,tempNodeStart,tempWeight);
+            tempNodeEnd->edges.push_back(tempEdge2);
+        }
+        (*Graph)[tempNodeStartVal-1] = tempNodeStart;
+        (*Graph)[tempNodeEndVal-1] = tempNodeEnd;
+    }
+}
+
+template<typename nodeType>
+void constructShortestPathFromGraph(graph<nodeType> *Graph, path<nodeType> *Path, int indexOfSourceNode, int indexOfDestinationNode)
+{
+    nodeType *source = (*Graph)[indexOfSourceNode];
+    nodeType *destination = (*Graph)[indexOfDestinationNode];
+    nodeType *tempNode = destination;
+    typename path<nodeType>::iterator itr = Path->begin();
+    Path->insert(itr,tempNode);
+    while(tempNode != source)
+    {
+        itr = Path->begin();
+        Path->insert(itr,tempNode->visitedBy);
+        tempNode = tempNode->visitedBy;
+    }
+}
+
+template<typename nodeType, typename edgeType>
+void initResidualGraph(graph<nodeType> *Graph, graph<nodeType> *residualGraph)
+{
+    size_t noOfNodes = Graph->size();
+    for(size_t i = 0; i < noOfNodes;i++)
+    {
+        (*residualGraph)[i] = new nodeType ((*Graph)[i]);
+        vector<edgeType*> tempEdges = (*Graph)[i]->edges;
+        size_t tempNoOfEdges = tempEdges.size();
+        edgeType *tempEdge;
+        for(size_t j = 0; j < tempNoOfEdges ;j++)
+        {
+            tempEdge = new edgeType(tempEdges[j]);
+            tempEdge->weight = 1;
+            tempEdge->residualCapacity = tempEdges[j]->residualCapacity;
+            (*residualGraph)[i]->edges.push_back(tempEdge);
+        }
+    }
+}
+
+template<typename nodeType, typename edgeType>
+void decompileGraph(graph<nodeType> *Graph)
+{
+    edgeType *tempEdge;
+    size_t noOfNodes = Graph->size();
+    size_t noOfEdges;
+    vector<edgeType*> tempEdges;
+    for(size_t i = 0; i < noOfNodes; i++)
+    {
+        printf("Node: %d\n", (*Graph)[i]->Id);
+        tempEdges = (*Graph)[i]->edges;
+        noOfEdges = tempEdges.size();
+        for(size_t j =0; j < noOfEdges; j++)
+        {
+            tempEdge = tempEdges[j];
+            printf("%d -> %d : %d,%d\n",tempEdge->first->Id, tempEdge->second->Id, tempEdge->weight, tempEdge->residualCapacity);
+        }
     }
 }
 
