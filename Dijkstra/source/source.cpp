@@ -8,8 +8,11 @@
 using namespace karanUtils;
 using namespace std;
 #define noOfNodes 200
+
 class node;
 class edge;
+typedef vector<node*> graph;
+typedef vector<edge*> path;
 class node {
 
 public:
@@ -17,6 +20,7 @@ public:
 	unsigned int Id;
 	int indexInHeap;
 	bool explored;
+    edge *visitedBy;
 	vector<edge*> edges;
 	node(int data,int Id)
 	{
@@ -24,6 +28,7 @@ public:
 		this->Id = Id;
 		indexInHeap = -1;
 		explored = false;
+	    visitedBy = NULL;
 	}
 	node();
 };
@@ -44,8 +49,8 @@ public:
 };
 int main()
 {
-	graph<node> *Graph;
-	Graph = new graph<node>(noOfNodes);
+	graph *Graph;
+	Graph = new graph(noOfNodes);
 	node* tempNodeStart,*tempNodeEnd;
 	edge* tempEdge,*tempEdge2;
 	int tempNodeStartVal,tempNodeEndVal,weight;

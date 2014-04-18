@@ -10,44 +10,40 @@ using namespace karanUtils;
 #define noOfNodes 200
 class node;
 class edge;
-class node {
+typedef vector<node*> graph;
+typedef vector<edge*> path;
+class node: public baseNode {
 
 public:
-	int data;
-	unsigned int Id;
 	int indexInHeap;
-	bool explored;
 	int weight;
+    edge* visitedBy;
 	vector<edge*> edges;
-	node(int data,int Id)
+	node(int data,int Id) : baseNode(data,Id)
 	{
-		this->data = data;
-		this->Id = Id;
 		indexInHeap = -1;
-		explored = false;
 		weight = 10000000;
+		visitedBy = NULL;
 	}
 	node();
 };
-class edge
+class edge : public baseEdge
 {
 public:
 	node* first;
 	node* second;
-	int   weight;
 	edge();
-	edge(node* first,node* second, unsigned int weight)
+	edge(node* first,node* second, unsigned int weight) : baseEdge(weight)
 	{
 		this->first = first;
 		this->second = second;
-		this->weight = weight;
 	}
 
 };
 int main()
 {
-	graph<node> *Graph;
-	Graph = new graph<node>(noOfNodes);
+	graph *Graph;
+	Graph = new graph(noOfNodes);
 	node* tempNodeStart,*tempNodeEnd;
 	edge* tempEdge,*tempEdge2;
 	int tempNodeStartVal,tempNodeEndVal,weight;
@@ -137,11 +133,8 @@ int main()
 	    Dijkstra<node,edge>(Graph,j,-1);
 		int NoOfNodes = (*Graph).size();
 		for(int i =0;i<NoOfNodes;i++)
-		{
 			Cache[j][(*Graph)[i]->Id] = (*Graph)[i]->data;
-			((*Graph)[i])->explored = false;
-			((*Graph)[i])->data = 10000000;
-		}
+	    resetGraph<node>(Graph);
 	}
 
 	//REMOVING THE BIAS FROM PATHS TO GET ORIGINAL VALUES
