@@ -31,7 +31,7 @@ class edge : public baseEdge
 public:
 	node* first;
 	node* second;
-	unsigned int residualCapacity;
+	int residualCapacity;
 	edge();
 	edge(node* first,node* second, unsigned int weight) : baseEdge(weight)
 	{

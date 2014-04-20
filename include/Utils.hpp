@@ -74,9 +74,9 @@ public:
 class baseEdge
 {
 public:
-	unsigned int weight;
+	int weight;
 	baseEdge();
-	baseEdge(unsigned int weight)
+	baseEdge(int weight)
 	{
 		this->weight = weight;
 	}
@@ -319,7 +319,7 @@ edgeType* getDuplicateEdge(nodeType* startNode, nodeType* endNode)
 	return NULL;
 }
 template <typename nodeType, typename edgeType>
-void readEdgesForGraph (vector<nodeType*> *Graph, int noOfNodes, int noOfEdges, bool isDirectedGraph, bool printGraph = false)
+void readEdgesForGraph (vector<nodeType*> *Graph, int noOfNodes, int noOfEdges, bool isDirectedGraph , bool printGraph = false)
 {
 	edgeType *tempEdge,*tempEdge2;
 	nodeType *tempNodeStart,*tempNodeEnd;
@@ -328,7 +328,6 @@ void readEdgesForGraph (vector<nodeType*> *Graph, int noOfNodes, int noOfEdges, 
 	for(int i = 0; i<noOfEdges;i++)
 	{
 		inp(tempNodeStartVal);inp(tempNodeEndVal);inp(tempWeight);
-		if(tempWeight<0) tempWeight = 0;
 		if(tempNodeStartVal == tempNodeEndVal) continue; //Duplicate edges
 		if(printGraph == true) printf("%d %d %d\n", tempNodeStartVal, tempNodeEndVal, tempWeight);
 		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new nodeType(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
@@ -393,7 +392,7 @@ void initResidualGraph(vector<nodeType*> *Graph, vector<nodeType*> *residualGrap
 		edgeType *tempEdge;
 		for(size_t j = 0; j < tempNoOfEdges ;j++)
 		{
-			if(tempEdges[j]->residualCapacity != 0)
+			if(tempEdges[j]->residualCapacity > 0)
 			{
 				tempEdge = new edgeType((*residualGraph)[tempEdges[j]->first->Id - 1],(*residualGraph)[tempEdges[j]->second->Id - 1],1,tempEdges[j]->residualCapacity);
 				(*residualGraph)[i]->edges.push_back(tempEdge);
