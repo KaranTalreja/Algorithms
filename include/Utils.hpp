@@ -402,6 +402,28 @@ void initResidualGraph(vector<nodeType*> *Graph, vector<nodeType*> *residualGrap
 }
 
 template<typename nodeType, typename edgeType>
+void initResidualGraphNodeCapacity(vector<nodeType*> *residualGraph, bool sumOfEdges = true)
+{
+	size_t noOfNodes = residualGraph->size();
+	for(size_t i = 0; i < noOfNodes;i++)
+	{
+		vector<edgeType*> tempEdges = (*residualGraph)[i]->edges;
+		size_t tempNoOfEdges = tempEdges.size();
+		edgeType *tempEdge;
+		if(true == sumOfEdges)
+		{
+			for(size_t j = 0; j < tempNoOfEdges ;j++)
+			{
+				if(tempEdges[j]->residualCapacity > 0)
+					tempEdges[j]->second->residualCapacity += tempEdges[j]->residualCapacity;
+			}
+		}
+		else
+			(*residualGraph)[i]->residualCapacity = 1;
+	}
+}
+
+template<typename nodeType, typename edgeType>
 void decompileGraph(vector<nodeType*> *Graph)
 {
 	edgeType *tempEdge;
@@ -410,7 +432,7 @@ void decompileGraph(vector<nodeType*> *Graph)
 	vector<edgeType*> tempEdges;
 	for(size_t i = 0; i < noOfNodes; i++)
 	{
-		printf("Node: %d %d\n", (*Graph)[i]->Id, (*Graph)[i]->data);
+		printf("Node: %d %d %d\n", (*Graph)[i]->Id, (*Graph)[i]->data, (*Graph)[i]->residualCapacity);
 		tempEdges = (*Graph)[i]->edges;
 		noOfEdges = tempEdges.size();
 		for(size_t j =0; j < noOfEdges; j++)

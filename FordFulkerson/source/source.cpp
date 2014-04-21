@@ -16,13 +16,16 @@ class node : public baseNode
 public:
 	edge* visitedBy;
 	vector<edge*> edges;
+	int residualCapacity;
 	node(int data,int Id): baseNode(data,Id)
 	{
 		visitedBy = NULL;
+		residualCapacity = 0;
 	}
 	node(int Id):baseNode(Id)
 	{
 		visitedBy = NULL;
+		residualCapacity = 0;
 	}
 	node();
 };
@@ -76,35 +79,6 @@ public:
 };
 int main()
 {
-	/*
-//	int noOfNodes =200;
-//	graph *Graph;
-//	Graph = new graph(noOfNodes);
-//	node* tempNodeStart,*tempNodeEnd;
-//	edge* tempEdge,*tempEdge2;
-//	int tempNodeStartVal,tempNodeEndVal,weight;
-//	char line[1000],*temp;
-//	temp = line;
-//	for(int i=0;i<noOfNodes;i++)
-//	{
-//		temp = line;
-//		inpLine(temp);
-//		tempNodeStartVal = getInt(&temp);
-//		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(10000000,tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
-//		while((strlen(temp)-2))
-//		{
-//			tempNodeEndVal =getInt(&temp);
-//			weight = getInt(&temp);
-//			tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(10000000,tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
-//			tempEdge = new edge(tempNodeStart,tempNodeEnd,weight);
-//			tempEdge2 = new edge(tempNodeEnd,tempNodeStart,weight);
-//			tempNodeStart->edges.push_back(tempEdge);
-//			tempNodeEnd->edges.push_back(tempEdge2);
-//			(*Graph)[tempNodeEndVal-1] = tempNodeEnd;
-//		}
-//		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
-//	}
-	 */
 	int noOfNodes, noOfEdges;
 	unsigned int maxFlow = 0;
 	inp(noOfNodes);
@@ -114,20 +88,28 @@ int main()
 	//	decompileGraph<node,edge>(Graph);
 	graph *residualGraph = new graph(noOfNodes);
 	initResidualGraph<node, edge> (Graph, residualGraph);
+	initResidualGraphNodeCapacity<node, edge>(residualGraph);
 	path *shortestAugmentingPath =  new path;
+	(*residualGraph)[0]->residualCapacity = 1100000000;
+	(*residualGraph)[noOfNodes - 1]->residualCapacity = 1100000000;
 	while(Dijkstra<node,edge>(residualGraph,0,noOfNodes-1))
 	{
 		constructShortestPathFromGraph <node, edge>(residualGraph, shortestAugmentingPath, 0, noOfNodes -1);
-		//		decompilePath<edge>(shortestAugmentingPath);
+//		decompilePath<edge>(shortestAugmentingPath);
 		size_t lengthOfPath = shortestAugmentingPath->size();
 		size_t criticalAugmentingFlow =  1100000000;
 		for(size_t i =0;i< lengthOfPath;i++)
 		{
+			if( i < lengthOfPath -1 )
+			{
+				if((*shortestAugmentingPath)[i]->second->residualCapacity < criticalAugmentingFlow)
+					criticalAugmentingFlow = (*shortestAugmentingPath)[i]->second->residualCapacity;
+			}
 			if((*shortestAugmentingPath)[i]->residualCapacity < criticalAugmentingFlow)
 				criticalAugmentingFlow = (*shortestAugmentingPath)[i]->residualCapacity;
 		}
 		maxFlow += criticalAugmentingFlow;
-		//		cout<<criticalAugmentingFlow<<endl;
+//		cout<<criticalAugmentingFlow<<endl;
 		for(size_t i =0;i< lengthOfPath;i++)
 		{
 			edge* tempEdge = (*shortestAugmentingPath)[i];
@@ -146,8 +128,30 @@ int main()
 			}
 			else
 				tempEdge->residualCapacity -= criticalAugmentingFlow;
+			if( i < lengthOfPath -1 )
+			{
+				if(tempEdge->second->residualCapacity == criticalAugmentingFlow)
+				{
+					size_t noOfNodes = (*residualGraph).size();
+					for(size_t i = 0 ; i< noOfNodes ; i++)
+					{
+						vector<edge*> tempEdges = (*residualGraph)[i]->edges;
+						size_t noOfEdges = tempEdges.size();
+						for(size_t j = 0 ; j< noOfEdges ; j++)
+						{
+							edge* tempEdgeToBeChecked = tempEdges[j];
+							if(tempEdgeToBeChecked->second == tempEdge->second)
+							{
+								tempEdgeToBeChecked->deleteEdge();
+								delete tempEdgeToBeChecked;
+							}
+						}
+					}
+				}
+					tempEdge->second->residualCapacity -= criticalAugmentingFlow;
+			}
 		}
-		///decompileGraph<node, edge>(residualGraph);
+//		decompileGraph<node, edge>(residualGraph);
 		resetGraph<node>(residualGraph);
 		shortestAugmentingPath->clear();
 	}
