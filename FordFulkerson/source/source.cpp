@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <math.h>
 #include <string.h>
+#include <tr1/unordered_set>
 #include "Utils.hpp"
 using namespace std;
 using namespace karanUtils;
@@ -11,6 +12,7 @@ class node;
 class edge;
 typedef vector<node*> graph;
 typedef vector<edge*> path;
+typedef tr1::unordered_set<int> hashInt;
 class node : public baseNode
 {
 public:
@@ -76,49 +78,24 @@ public:
 };
 int main()
 {
-	/*
-//	int noOfNodes =200;
-//	graph *Graph;
-//	Graph = new graph(noOfNodes);
-//	node* tempNodeStart,*tempNodeEnd;
-//	edge* tempEdge,*tempEdge2;
-//	int tempNodeStartVal,tempNodeEndVal,weight;
-//	char line[1000],*temp;
-//	temp = line;
-//	for(int i=0;i<noOfNodes;i++)
-//	{
-//		temp = line;
-//		inpLine(temp);
-//		tempNodeStartVal = getInt(&temp);
-//		tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new node(10000000,tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
-//		while((strlen(temp)-2))
-//		{
-//			tempNodeEndVal =getInt(&temp);
-//			weight = getInt(&temp);
-//			tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new node(10000000,tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
-//			tempEdge = new edge(tempNodeStart,tempNodeEnd,weight);
-//			tempEdge2 = new edge(tempNodeEnd,tempNodeStart,weight);
-//			tempNodeStart->edges.push_back(tempEdge);
-//			tempNodeEnd->edges.push_back(tempEdge2);
-//			(*Graph)[tempNodeEndVal-1] = tempNodeEnd;
-//		}
-//		(*Graph)[tempNodeStartVal-1] = tempNodeStart;
-//	}
-	 */
 	int noOfNodes, noOfEdges;
 	unsigned int maxFlow = 0;
+	hashInt hash;
 	inp(noOfNodes);
 	inp(noOfEdges);
 	graph *Graph = new graph(noOfNodes);
 	readEdgesForGraph<node, edge>(Graph, noOfNodes, noOfEdges, false/*isDirectedGraph*/);
-	//	decompileGraph<node,edge>(Graph);
-	graph *residualGraph = new graph(noOfNodes);
-	initResidualGraph<node, edge> (Graph, residualGraph);
+	graph *residualGraph;
+	bool isVertexCapacity = true;
+	if(isVertexCapacity == true)
+	    residualGraph = new graph(noOfNodes * 2);
+	else
+	    residualGraph = new graph(noOfNodes);
+	initResidualGraph<node, edge> (Graph, residualGraph,isVertexCapacity);
 	path *shortestAugmentingPath =  new path;
 	while(Dijkstra<node,edge>(residualGraph,0,noOfNodes-1))
 	{
 		constructShortestPathFromGraph <node, edge>(residualGraph, shortestAugmentingPath, 0, noOfNodes -1);
-		//		decompilePath<edge>(shortestAugmentingPath);
 		size_t lengthOfPath = shortestAugmentingPath->size();
 		size_t criticalAugmentingFlow =  1100000000;
 		for(size_t i =0;i< lengthOfPath;i++)
@@ -127,7 +104,22 @@ int main()
 				criticalAugmentingFlow = (*shortestAugmentingPath)[i]->residualCapacity;
 		}
 		maxFlow += criticalAugmentingFlow;
-		//		cout<<criticalAugmentingFlow<<endl;
+		if(criticalAugmentingFlow > 0)
+		{
+		cout<<criticalAugmentingFlow<<" : ";
+		decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
+        for(size_t i =0;i< lengthOfPath-1;i++)
+        {
+            if(hash.find((*shortestAugmentingPath)[i]->second->Id) != hash.end())
+            {
+                cout<<"FAILIURE : "<<(*shortestAugmentingPath)[i]->second->Id<<endl;
+                decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
+//                return 0;
+            }
+            else
+                hash.insert((*shortestAugmentingPath)[i]->second->Id);
+        }
+		}
 		for(size_t i =0;i< lengthOfPath;i++)
 		{
 			edge* tempEdge = (*shortestAugmentingPath)[i];
@@ -147,7 +139,6 @@ int main()
 			else
 				tempEdge->residualCapacity -= criticalAugmentingFlow;
 		}
-		///decompileGraph<node, edge>(residualGraph);
 		resetGraph<node>(residualGraph);
 		shortestAugmentingPath->clear();
 	}
