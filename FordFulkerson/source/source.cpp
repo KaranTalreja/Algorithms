@@ -18,7 +18,7 @@ class node : public baseNode
 public:
 	edge* visitedBy;
 	vector<edge*> edges;
-	node(int data,int Id): baseNode(data,Id)
+	node(size_t data,int Id): baseNode(data,Id)
 	{
 		visitedBy = NULL;
 	}
@@ -33,15 +33,15 @@ class edge : public baseEdge
 public:
 	node* first;
 	node* second;
-	int residualCapacity;
+	size_t residualCapacity;
 	edge();
-	edge(node* first,node* second, unsigned int weight) : baseEdge(weight)
+	edge(node* first,node* second, size_t weight) : baseEdge(weight)
 	{
 		this->first = first;
 		this->second = second;
 		this->residualCapacity = weight;
 	}
-	edge(node* first,node* second, unsigned int weight, unsigned int residualCapacity) : baseEdge(weight)
+	edge(node* first,node* second, size_t weight, size_t residualCapacity) : baseEdge(weight)
 	{
 		this->first = first;
 		this->second = second;
@@ -79,7 +79,7 @@ public:
 int main()
 {
 	int noOfNodes, noOfEdges;
-	unsigned int maxFlow = 0;
+	size_t maxFlow = 0;
 	hashInt hash;
 	inp(noOfNodes);
 	inp(noOfEdges);
@@ -104,22 +104,23 @@ int main()
 				criticalAugmentingFlow = (*shortestAugmentingPath)[i]->residualCapacity;
 		}
 		maxFlow += criticalAugmentingFlow;
-		if(criticalAugmentingFlow > 0)
-		{
-		cout<<criticalAugmentingFlow<<" : ";
-		decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
-        for(size_t i =0;i< lengthOfPath-1;i++)
-        {
-            if(hash.find((*shortestAugmentingPath)[i]->second->Id) != hash.end())
-            {
-                cout<<"FAILIURE : "<<(*shortestAugmentingPath)[i]->second->Id<<endl;
-                decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
-//                return 0;
-            }
-            else
-                hash.insert((*shortestAugmentingPath)[i]->second->Id);
-        }
-		}
+//		if(criticalAugmentingFlow > 0)
+//		{
+//		cout<<criticalAugmentingFlow<<" : ";
+//		decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
+//        for(size_t i =0;i< lengthOfPath-1;i++)
+//        {
+//        	size_t temp = (*shortestAugmentingPath)[i]->second->Id;
+//            if(hash.find((*shortestAugmentingPath)[i]->second->Id) != hash.end())
+//            {
+//                cout<<"FAILIURE : "<<(*shortestAugmentingPath)[i]->second->Id<<endl;
+//                decompilePath<edge>(shortestAugmentingPath,noOfNodes ,isVertexCapacity);
+////                return 0;
+//            }
+//            else
+//                hash.insert((*shortestAugmentingPath)[i]->second->Id);
+//        }
+//		}
 		for(size_t i =0;i< lengthOfPath;i++)
 		{
 			edge* tempEdge = (*shortestAugmentingPath)[i];
@@ -142,9 +143,9 @@ int main()
 		resetGraph<node>(residualGraph);
 		shortestAugmentingPath->clear();
 	}
-	printf("%d\n", maxFlow);
-	deleteGraph<node>(Graph);
-	deleteGraph<node>(residualGraph);
+	printf("%ld\n", maxFlow);
+//	deleteGraph<node>(Graph);
+//	deleteGraph<node>(residualGraph);
 	return 0;
 }
 

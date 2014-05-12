@@ -51,7 +51,7 @@ class baseEdge;
 class baseNode
 {
 public:
-    unsigned int data; /*heapKey Or Dijkstra distance*/
+    size_t data; /*heapKey Or Dijkstra distance*/
     int indexInHeap;
     unsigned int Id;
     bool explored;
@@ -64,7 +64,7 @@ public:
     }
     baseNode(int Id)
     {
-        this->data = 10000000;
+        this->data = 1100000000;
         indexInHeap = -1;
         this->Id = Id;
         explored = false;
@@ -74,9 +74,9 @@ public:
 class baseEdge
 {
 public:
-    int weight;
+    size_t weight;
     baseEdge();
-    baseEdge(int weight)
+    baseEdge(size_t weight)
     {
         this->weight = weight;
     }
@@ -328,10 +328,15 @@ void readEdgesForGraph (vector<nodeType*> *Graph, int noOfNodes, int noOfEdges, 
     for(int i = 0; i<noOfEdges;i++)
     {
         inp(tempNodeStartVal);inp(tempNodeEndVal);inp(tempWeight);
-        if(tempNodeStartVal == tempNodeEndVal) continue; //Duplicate edges
         if(printGraph == true) printf("%d %d %d\n", tempNodeStartVal, tempNodeEndVal, tempWeight);
         tempNodeStart = (NULL == (*Graph)[tempNodeStartVal-1]) ? new nodeType(tempNodeStartVal) : (*Graph)[tempNodeStartVal-1];
         tempNodeEnd = (NULL == (*Graph)[tempNodeEndVal-1]) ? new nodeType(tempNodeEndVal) : (*Graph)[tempNodeEndVal-1];
+        if(tempNodeStartVal == tempNodeEndVal)
+        {
+            (*Graph)[tempNodeStartVal-1] = tempNodeStart;
+            (*Graph)[tempNodeEndVal-1] = tempNodeEnd;
+            continue;
+        }//Duplicate edges
         tempEdge = getDuplicateEdge<nodeType, edgeType>(tempNodeStart, tempNodeEnd);
         if(NULL != tempEdge)
         {
@@ -369,7 +374,7 @@ void constructShortestPathFromGraph(vector<nodeType*> *Graph,vector<edgeType*> *
     nodeType *destination = (*Graph)[indexOfDestinationNode];
     nodeType *tempNode = destination;
     typename vector<edgeType*>::iterator itr = Path->begin();
-    while(tempNode->visitedBy->first != source)
+    while(tempNode->visitedBy != NULL && tempNode->visitedBy->first != source)
     {
         itr = Path->begin();
         Path->insert(itr,tempNode->visitedBy);
@@ -389,6 +394,7 @@ void initResidualGraph(vector<nodeType*> *Graph, vector<nodeType*> *residualGrap
             (*residualGraph)[i] = new nodeType (i + 1);
         for(size_t i = 0; i < noOfNodes;i++)
         {
+        	if((*Graph)[i] == NULL) continue;
             vector<edgeType*> tempEdges = (*Graph)[i]->edges;
             size_t tempNoOfEdges = tempEdges.size();
             edgeType *tempEdge;
@@ -409,6 +415,7 @@ void initResidualGraph(vector<nodeType*> *Graph, vector<nodeType*> *residualGrap
             (*residualGraph)[i] = new nodeType (i + 1);
         for(size_t i = 0; i < noOfNodes;i++)
         {
+        	if((*Graph)[i] == NULL) continue;
             vector<edgeType*> tempEdges = (*Graph)[i]->edges;
             size_t tempNoOfEdges = tempEdges.size();
             edgeType *tempEdge;
@@ -485,11 +492,12 @@ void decompilePath(vector<edgeType*> *Path,int noOfNodes = 0,bool isVertexCapaci
 template<typename nodeType>
 void resetGraph(vector<nodeType*> *Graph)
 {
-    int NoOfNodes = (*Graph).size();
-    for(int i =0;i<NoOfNodes;i++)
+    size_t NoOfNodes = (*Graph).size();
+    for(size_t i =0;i<NoOfNodes;i++)
     {
+    	if((*Graph)[i] == NULL) continue;
         ((*Graph)[i])->explored = false;
-        ((*Graph)[i])->data = 10000000;
+        ((*Graph)[i])->data = 1100000000;
         ((*Graph)[i])->visitedBy = NULL;
         ((*Graph)[i])->indexInHeap = -1;
     }
